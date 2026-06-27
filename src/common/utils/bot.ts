@@ -26,7 +26,7 @@ export async function handleSelect(interaction: Interaction) {
     const button = new ButtonBuilder()
       .setLabel("Baca Selengkapnya")
       .setStyle(5)
-      .setURL(`https://jkt48.com/news/detail/id/${selectedId}?lang=id`);
+      .setURL(`https://jkt48.com/news/${selectedId}?lang=id`);
 
     const row = new ActionRowBuilder<ButtonBuilder>().addComponents(button);
 

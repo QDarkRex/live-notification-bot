@@ -21,7 +21,8 @@ newsRouter.get("/", async (req, res) => {
 });
 
 newsRouter.get("/detail/:id", async (req, res) => {
-  const id = Number(req.params.id);
+  // The new jkt48 API keys news by slug, not a numeric id.
+  const id = req.params.id;
 
   try {
     const newsDetail = await fetchNewsDetail(id);

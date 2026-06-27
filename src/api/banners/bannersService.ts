@@ -1,57 +1,47 @@
-import { env } from "@/common/utils/envConfig";
-import type { FlareSolved } from "@/common/utils/news";
-
-import axios from "axios";
-import * as cheerio from "cheerio";
+import { jkt48ApiGet } from "@/common/utils/jkt48Api";
 
 interface Banner {
   value?: string | undefined;
   img_url?: string | undefined;
 }
 
-export const fetchBannerData = async () => {
-  // const url = "https://jkt48.com/";
-  const url = `${env.FLARE_SOLVER_BASE}/v1`;
-  const response = await axios.post<FlareSolved>(
-    url,
-    {
-      cmd: "request.get",
-      url: "https://jkt48.com/",
-      maxTimeout: 60000,
-    },
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    },
-  );
-  return response.data.solution.response;
+/**
+ * Banners moved into the homepage payload:
+ *   GET /api/v1/home?lang=id  ->  data.banners[]
+ * The exact banner item shape isn't documented (the array is often empty), so
+ * we map the most likely field names defensively.
+ */
+
+interface HomeApi {
+  banners?: HomeBanner[];
+  sections?: unknown[];
+  socials?: unknown[];
+}
+
+interface HomeBanner {
+  url?: string;
+  link?: string;
+  value?: string;
+  image?: string;
+  img_url?: string;
+  banner_image?: string;
+  thumbnail_image?: string;
+}
+
+export const fetchBannerData = async (): Promise<HomeBanner[] | null> => {
+  try {
+    const home = await jkt48ApiGet<HomeApi>("home?lang=id");
+    return home?.banners ?? [];
+  } catch (error) {
+    const err = error as Error;
+    console.error("Error fetching banner data:", err.message);
+    return null;
+  }
 };
 
-export const parseBannerData = (html: string) => {
-  const $ = cheerio.load(html);
-
-  const divMain = $("section");
-  const listSlidersMentah = divMain.find(".hero-home a");
-
-  const listSlider: Banner[] = [];
-
-  listSlidersMentah.each((index, element) => {
-    const model: Banner = {
-      img_url: "",
-      value: "",
-    };
-    const sliderMentah = $(element);
-
-    model.value = sliderMentah.attr("href");
-
-    const img = sliderMentah.find("img");
-    if (img.attr("src")) {
-      model.img_url = img.attr("src");
-    }
-
-    listSlider.push(model);
-  });
-
-  return listSlider;
+export const parseBannerData = (banners: HomeBanner[]): Banner[] => {
+  return (banners ?? []).map((b) => ({
+    value: b.url ?? b.link ?? b.value ?? "",
+    img_url: b.image ?? b.img_url ?? b.banner_image ?? b.thumbnail_image ?? "",
+  }));
 };

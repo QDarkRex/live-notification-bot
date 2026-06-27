@@ -1,7 +1,4 @@
-import axios from "axios";
-import * as cheerio from "cheerio";
-import { env } from "./envConfig";
-import type { FlareSolved } from "./news";
+import { jkt48ApiGet } from "./jkt48Api";
 
 interface Event {
   bulan_tahun: string;
@@ -14,109 +11,64 @@ interface Event {
   have_event: boolean;
 }
 
-export const fetchEvents = async () => {
-  // const url = "https://jkt48.com/calendar/list?lang=id";
-  const url = `${env.FLARE_SOLVER_BASE}/v1`;
+/**
+ * Calendar events now come from the JSON API:
+ *   GET /api/v1/schedules?lang=id&month=MM&year=YYYY
+ * We treat EVENT/EXCLUSIVE entries (everything that isn't a theater SHOW) as
+ * "events", matching the old /calendar/list behaviour.
+ */
 
-  const response = await axios.post<FlareSolved>(
-    url,
-    {
-      cmd: "request.get",
-      url: "https://jkt48.com/calendar/list?lang=id",
-      maxTimeout: 60000,
-    },
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    },
-  );
-  return response.data.solution.response;
+interface ScheduleApiItem {
+  link: string;
+  date: string;
+  start_time: string;
+  type: "SHOW" | "EXCLUSIVE" | "EVENT" | string;
+  title: string;
+  reference_code?: string | null;
+}
+
+const DAY_NAMES_ID = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+const MONTH_FULL_ID = [
+  "Januari",
+  "Februari",
+  "Maret",
+  "April",
+  "Mei",
+  "Juni",
+  "Juli",
+  "Agustus",
+  "September",
+  "Oktober",
+  "November",
+  "Desember",
+];
+
+export const fetchEvents = async (): Promise<ScheduleApiItem[] | null> => {
+  try {
+    const now = new Date();
+    const mm = String(now.getMonth() + 1).padStart(2, "0");
+    const items = await jkt48ApiGet<ScheduleApiItem[]>(`schedules?lang=id&month=${mm}&year=${now.getFullYear()}`);
+    return items.filter((i) => i.type === "EVENT" || i.type === "EXCLUSIVE");
+  } catch (error) {
+    const err = error as Error;
+    console.error("Error fetching events:", err.message);
+    return null;
+  }
 };
 
-export const parseEvents = (html: string) => {
-  const $ = cheerio.load(html);
-
-  const tableBody = $("tbody");
-  const rows = tableBody.find("tr");
-
-  const bulan_tahun = $(".entry-schedule__header--center").text().trim();
-
-  const lists = [];
-  const size = rows.length;
-  let x = 0;
-
-  while (x < size) {
-    const model: Event = {
-      bulan_tahun: "",
-      event_id: "",
-      event_name: "",
-      event_time: "",
-      hari: "",
-      have_event: false,
-      tanggal: "",
+export const parseEvents = (items: ScheduleApiItem[]): Event[] => {
+  return (items ?? []).map((item) => {
+    const [y, m, d] = item.date.split("-").map((n) => Number.parseInt(n, 10));
+    const dayName = DAY_NAMES_ID[new Date(y, m - 1, d).getDay()];
+    return {
+      bulan_tahun: `${MONTH_FULL_ID[m - 1]} ${y}`,
+      tanggal: String(d),
+      hari: dayName,
       badge_url: "",
+      event_name: item.title,
+      event_time: (item.start_time ?? "").slice(0, 5),
+      event_id: item.link,
+      have_event: true,
     };
-    model.bulan_tahun = bulan_tahun;
-
-    const list_td = rows.eq(x).find("td");
-
-    const tanggal_mentah = list_td.eq(0).find("h3").text();
-
-    const tanggal_rplc = tanggal_mentah.replace(")", "");
-    const tanggal_spl = tanggal_rplc.split("(");
-
-    if (tanggal_spl.length > 0) {
-      const tanggal = tanggal_spl[0];
-      // console.log('tanggal ' + tanggal);
-
-      model.tanggal = tanggal;
-    }
-
-    if (tanggal_spl.length >= 1) {
-      const hari = tanggal_spl[1];
-
-      model.hari = hari;
-    }
-
-    const list_event = list_td.eq(1).find("div");
-    const size_of_event = list_event.length;
-    let position_event = 0;
-
-    while (position_event < size_of_event) {
-      const event = list_event.eq(position_event);
-
-      const badge_span = event.find("span");
-      const badge_img = badge_span.find("img");
-      if (badge_img.attr("src")) {
-        model.badge_url = badge_img.attr("src");
-      }
-
-      const event_name_full = event.find("p").text().trim();
-      const event_name = event_name_full.slice(6);
-
-      model.event_name = event_name;
-      const event_jam = event_name_full.slice(0, 5);
-
-      model.event_time = event_jam;
-
-      const url_event_full = event.find("a").attr("href");
-      const url_event_full_rplc = url_event_full?.replace("?lang=id", "");
-      const url_event_full_rplc_2 = url_event_full_rplc?.replace("/theater/schedule/id/", "");
-
-      model.event_id = url_event_full_rplc_2;
-      model.have_event = true;
-
-      lists.push(model);
-      position_event += 1;
-    }
-
-    if (size_of_event === 0) {
-      model.have_event = false;
-      lists.push(model);
-    }
-    x += 1;
-  }
-
-  return lists;
+  });
 };

@@ -1,6 +1,4 @@
-import axios from "axios";
-import * as cheerio from "cheerio";
-import { env } from "./envConfig";
+import { jkt48ApiGet } from "./jkt48Api";
 
 export interface Schedule {
   showInfo: string;
@@ -22,211 +20,179 @@ export interface ParsedSchedule {
   events: Event[];
 }
 
-export interface FlareSolved {
-  solution: Solution;
-  status: string;
-  message: string;
-  startTimestamp: number;
-  endTimestamp: number;
-  version: string;
+/**
+ * jkt48.com is now a Nuxt SPA. Schedules come from:
+ *   GET /api/v1/schedules?lang=id&month=MM&year=YYYY     (calendar; SHOW/EXCLUSIVE/EVENT)
+ *   GET /api/v1/theater-shows/{code}?lang=id             (per-show member lineup)
+ *
+ * The downstream notifiers/commands parse `showInfo` as
+ *   "{DayName}, {D}.{M}.{YYYY} Show {HH:MM}"  (no leading zeros on day/month)
+ * so we reproduce exactly that format here.
+ */
+
+interface ScheduleApiItem {
+  link: string;
+  schedule_id: number;
+  date: string; // "2026-06-27"
+  start_time: string; // "19:00:00"
+  end_time: string;
+  type: "SHOW" | "EXCLUSIVE" | "EVENT" | string;
+  title: string;
+  jkt48_member_type?: string | null;
+  birthday_member?: string | null;
+  reference_code?: string | null;
 }
 
-export interface Solution {
-  url: string;
-  status: number;
-  headers: Headers;
-  response: string;
-  cookies: Cooky[];
-  userAgent: string;
-  turnstile_token: string;
-}
-
-export interface Cooky {
-  name: string;
-  value: string;
-  domain: string;
-  path: string;
-  expires: number;
-  size: number;
-  httpOnly: boolean;
-  secure: boolean;
-  session: boolean;
-  sameSite: string;
-}
-
-export interface Headers {
-  status: string;
+interface TheaterShowApi {
   date: string;
-  expires: string;
-  "cache-control": string;
-  "content-type": string;
-  "strict-transport-security": string;
-  p3p: string;
-  "content-encoding": string;
-  server: string;
-  "content-length": string;
-  "x-xss-protection": string;
-  "x-frame-options": string;
-  "set-cookie": string;
+  start_time: string;
+  title: string;
+  jkt48_member?: { name: string; type: string; member_id: number }[];
+  birthday_member_name?: string[];
 }
 
-// Function to map month numbers to month abbreviations
-const mapMonthNumberToAbbreviation = (monthNumber: string) => {
-  const monthAbbreviations = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+export interface EnrichedShow {
+  date: string;
+  start_time: string;
+  setlist: string;
+  members: string[];
+  birthday: string[] | null;
+}
 
-  return monthAbbreviations[Number.parseInt(monthNumber, 10) - 1];
-};
+// getDay() => 0..6 (Sunday..Saturday)
+const DAY_NAMES_ID = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+// Abbreviations as the notifiers/commands expect them (note: "Juni"/"Juli"/"Agt"/"Sept")
+const MONTH_ABBR_ID = ["Jan", "Feb", "Mar", "Apr", "Mei", "Juni", "Juli", "Agt", "Sept", "Okt", "Nov", "Des"];
+const MONTH_FULL_ID = [
+  "Januari",
+  "Februari",
+  "Maret",
+  "April",
+  "Mei",
+  "Juni",
+  "Juli",
+  "Agustus",
+  "September",
+  "Oktober",
+  "November",
+  "Desember",
+];
 
-const parseShowInfo = (showInfoFull: string) => {
-  const regex = /(\w+),\s(\d{1,2}\.\d{1,2}\.\d{4})\s+Show\s(\d{1,2}:\d{2})/;
-  const match = showInfoFull.match(regex);
-  if (match) {
-    const day = match[1];
-    const date = match[2];
-    const time = match[3];
-    return `${day}, ${date} ${time}`;
-  }
-  return showInfoFull;
-};
+function ymd(dateStr: string): { y: number; m: number; d: number; dayName: string } {
+  const [y, m, d] = dateStr.split("-").map((n) => Number.parseInt(n, 10));
+  const dayName = DAY_NAMES_ID[new Date(y, m - 1, d).getDay()];
+  return { y, m, d, dayName };
+}
 
-const isValidShowInfo = (showInfo: string) => {
-  const daysOfWeek = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
-  return daysOfWeek.some((day) => showInfo.includes(day));
-};
+async function fetchMonthSchedule(month: number, year: number): Promise<ScheduleApiItem[]> {
+  const mm = String(month).padStart(2, "0");
+  return jkt48ApiGet<ScheduleApiItem[]>(`schedules?lang=id&month=${mm}&year=${year}`);
+}
 
-export const getSchedule = async () => {
-  // const url = "https://jkt48.com/theater/schedule";
-  const url = `${env.FLARE_SOLVER_BASE}/v1`;
-
-  const result = await axios.post<FlareSolved>(
-    url,
-    {
-      cmd: "request.get",
-      url: "https://jkt48.com/theater/schedule",
-      maxTimeout: 60000,
-    },
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    },
-  );
-  return result.data.solution.response;
-};
-
-export const parseScheduleData = (html: string) => {
-  const $ = cheerio.load(html);
-
-  const table = $(".table");
-  const scheduleData: Schedule[] = [];
-
-  table.find("tbody tr").each((index, element) => {
-    const showInfoFull = $(element).find("td:nth-child(1)").text().trim();
-    const setlist = $(element).find("td:nth-child(2)").text().trim();
-
-    // Ambil anggota yang tidak memiliki style
-    const members = $(element)
-      .find("td:nth-child(3) a:not([style])") // Ambil anggota tanpa style
-      .map((i, el) => $(el).text().trim())
-      .get();
-
-    // Ambil anggota yang memiliki style
-    const birthdayMembers = $(element)
-      .find('td:nth-child(3) a[style="color:#616D9D"]')
-      .map((i, el) => $(el).text().trim())
-      .get();
-
-    const showInfo = parseShowInfo(showInfoFull);
-
-    if (isValidShowInfo(showInfo)) {
-      if (!showInfo.includes("Penukaran tiket")) {
-        scheduleData.push({
-          showInfo,
-          setlist,
-          members, // Daftar anggota tanpa style
-          birthday: birthdayMembers.length > 0 ? birthdayMembers : null, // Daftar anggota berulang tahun
-        });
-      }
-    }
-  });
-
-  return scheduleData.reverse();
-};
-
-export const fetchScheduleSectionData = async () => {
-  // const url = "https://jkt48.com/";
-  const url = `${env.FLARE_SOLVER_BASE}/v1`;
-
+/**
+ * Fetch theater shows for the current month, enriched with each show's member
+ * lineup (via the per-show detail endpoint).
+ */
+export const getSchedule = async (): Promise<EnrichedShow[] | null> => {
   try {
-    const response = await axios.post<FlareSolved>(
-      url,
-      {
-        cmd: "request.get",
-        url: "https://jkt48.com/",
-        maxTimeout: 60000,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
+    const now = new Date();
+    const items = await fetchMonthSchedule(now.getMonth() + 1, now.getFullYear());
+    const shows = items.filter((i) => i.type === "SHOW");
+
+    const enriched = await Promise.all(
+      shows.map(async (s): Promise<EnrichedShow> => {
+        let members: string[] = [];
+        let birthday: string[] | null = null;
+
+        if (s.reference_code) {
+          try {
+            const detail = await jkt48ApiGet<TheaterShowApi>(`theater-shows/${s.reference_code}?lang=id`);
+            members = (detail.jkt48_member ?? []).map((m) => m.name);
+            const bdays = detail.birthday_member_name ?? [];
+            birthday = bdays.length > 0 ? bdays : null;
+          } catch (err) {
+            // Lineup not available yet — fall back to empty members.
+          }
+        }
+
+        return {
+          date: s.date,
+          start_time: s.start_time,
+          setlist: s.title,
+          members,
+          birthday,
+        };
+      }),
     );
-    return response.data.solution.response;
+
+    return enriched;
   } catch (error) {
+    const err = error as Error;
+    console.error("Error fetching schedule:", err.message);
     return null;
   }
 };
 
-export const parseScheduleSectionData = (html: string) => {
-  const $ = cheerio.load(html);
-  const data: ParsedSchedule[] = [];
-  const tableBody = $(".entry-schedule__calendar table tbody");
-  const rows = tableBody.find("tr");
+export const parseScheduleData = (shows: EnrichedShow[]): Schedule[] => {
+  return (shows ?? []).map((s) => {
+    const { y, m, d, dayName } = ymd(s.date);
+    const time = (s.start_time ?? "").slice(0, 5);
+    return {
+      showInfo: `${dayName}, ${d}.${m}.${y} Show ${time}`,
+      setlist: s.setlist,
+      members: s.members,
+      birthday: s.birthday && s.birthday.length > 0 ? s.birthday : null,
+    };
+  });
+};
 
-  rows.each((index, element) => {
-    const row = $(element);
-    const columns = row.find("td");
+/** Build a best-effort public URL (path with leading slash) for an event entry. */
+function eventUrlFor(item: ScheduleApiItem): string {
+  if (item.type === "EXCLUSIVE" && item.reference_code) {
+    return `/purchase/exclusive?code=${item.reference_code}`;
+  }
+  return "/schedule/theater";
+}
 
-    const dateInfo = columns.eq(0).find("h3").text().trim();
-    const [tanggal, monthNumber] = dateInfo.split("/");
+/**
+ * Fetch the non-theater entries (EVENT/EXCLUSIVE) for the current month, used by
+ * the "today/upcoming events" notifiers and the /events command.
+ */
+export const fetchScheduleSectionData = async (): Promise<ScheduleApiItem[] | null> => {
+  try {
+    const now = new Date();
+    const items = await fetchMonthSchedule(now.getMonth() + 1, now.getFullYear());
+    return items.filter((i) => i.type === "EVENT" || i.type === "EXCLUSIVE");
+  } catch (error) {
+    const err = error as Error;
+    console.error("Error fetching schedule section:", err.message);
+    return null;
+  }
+};
 
-    // Convert month number to month abbreviation
-    const monthAbbrev = mapMonthNumberToAbbreviation(monthNumber);
+export const parseScheduleSectionData = (items: ScheduleApiItem[]): ParsedSchedule[] => {
+  // Group events that fall on the same day.
+  const byDate = new Map<string, ParsedSchedule>();
 
-    const formattedDay = dateInfo.split("(")[1].replace(")", "").trim(); // Extract and clean up the day
+  for (const item of items ?? []) {
+    const { m, d, dayName } = ymd(item.date);
+    const key = item.date;
 
-    const events: Event[] = [];
-    columns.each((index, column) => {
-      if (index > 0) {
-        const eventColumns = $(column).find(".contents");
-
-        eventColumns.each((eventIndex, eventColumn) => {
-          const badgeImg = $(eventColumn).find("span.badge img").attr("src");
-          const eventName = $(eventColumn).find("p a").text().trim();
-          const eventUrl = $(eventColumn).find("p a").attr("href");
-
-          // Only include events with badgeUrl equal to '/images/icon.cat2.png'
-          if (badgeImg === "/images/icon.cat2.png") {
-            events.push({
-              badgeUrl: badgeImg,
-              eventName,
-              eventUrl,
-            });
-          }
-        });
-      }
-    });
-
-    // Add data only if there are events that pass the filter
-    if (events.length > 0) {
-      data.push({
-        tanggal,
-        hari: formattedDay,
-        bulan: monthAbbrev,
-        events,
+    if (!byDate.has(key)) {
+      byDate.set(key, {
+        tanggal: String(d),
+        hari: dayName,
+        bulan: MONTH_ABBR_ID[m - 1],
+        events: [],
       });
     }
-  });
 
-  return data.reverse();
+    byDate.get(key)?.events.push({
+      badgeUrl: "",
+      eventName: item.title,
+      eventUrl: eventUrlFor(item),
+    });
+  }
+
+  return Array.from(byDate.values());
 };

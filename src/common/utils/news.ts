@@ -1,6 +1,5 @@
-import axios from "axios";
 import * as cheerio from "cheerio";
-import { env } from "./envConfig";
+import { jkt48ApiGet } from "./jkt48Api";
 
 export type ParsedNews = ReturnType<typeof parseNewsData>;
 
@@ -8,6 +7,7 @@ interface News {
   badge_url?: string | undefined;
   waktu: string;
   judul: string;
+  /** Now a slug (e.g. "pengumuman-...") instead of the old numeric id. */
   berita_id: string;
 }
 
@@ -18,6 +18,42 @@ interface NewsDetails {
   gambar?: string[] | null;
 }
 
+/**
+ * NOTE: jkt48.com migrated to a Nuxt SPA + JSON API. News is now served by
+ *   GET /api/v1/news?lang=id            (list)
+ *   GET /api/v1/news/{slug}?lang=id     (detail)
+ * and is keyed by a slug, not the old numeric id.
+ */
+
+/** Item shape from GET /api/v1/news */
+export interface NewsApiItem {
+  total_row_count?: string;
+  title: string;
+  category: string;
+  /** slug used for the detail endpoint and public URL */
+  link: string;
+  background_image?: string | null;
+  is_published?: boolean;
+  valid_date_from?: string | null;
+  news_id?: number;
+}
+
+/** Shape from GET /api/v1/news/{slug} */
+interface NewsDetailApi {
+  count?: number;
+  result?: {
+    title?: string;
+    category?: string;
+    link?: string;
+    valid_date_from?: string | null;
+    content_body?: string;
+  };
+}
+
+/**
+ * `FlareSolved` is kept here for backwards compatibility: other modules
+ * (video.ts, birthday.ts) still import this type from "./news".
+ */
 export interface FlareSolved {
   solution: Solution;
   status: string;
@@ -30,184 +66,88 @@ export interface FlareSolved {
 export interface Solution {
   url: string;
   status: number;
-  headers: Headers;
+  headers: Record<string, string>;
   response: string;
-  cookies: Cooky[];
+  cookies: unknown[];
   userAgent: string;
-  turnstile_token: string;
 }
 
-export interface Cooky {
-  name: string;
-  value: string;
-  domain: string;
-  path: string;
-  expires: number;
-  size: number;
-  httpOnly: boolean;
-  secure: boolean;
-  session: boolean;
-  sameSite: string;
+const ID_MONTHS = [
+  "Januari",
+  "Februari",
+  "Maret",
+  "April",
+  "Mei",
+  "Juni",
+  "Juli",
+  "Agustus",
+  "September",
+  "Oktober",
+  "November",
+  "Desember",
+];
+
+function formatIdDate(iso?: string | null): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return `${d.getDate()} ${ID_MONTHS[d.getMonth()]} ${d.getFullYear()}`;
 }
 
-export interface Headers {
-  status: string;
-  date: string;
-  expires: string;
-  "cache-control": string;
-  "content-type": string;
-  "strict-transport-security": string;
-  p3p: string;
-  "content-encoding": string;
-  server: string;
-  "content-length": string;
-  "x-xss-protection": string;
-  "x-frame-options": string;
-  "set-cookie": string;
-}
-
-const parseNewsDetail = (html: string) => {
-  const $ = cheerio.load(html);
-  const data: NewsDetails = {
-    judul: "",
-    konten: "",
-    tanggal: "",
-    gambar: [""],
-  };
-
-  const title = $(".entry-news__detail h3").text();
-  const date = $(".metadata2.mb-2").text();
-
-  let content = $(".MsoNormal")
-    .map((i, el) => {
-      $(el).find('span[style*="mso-tab-count"]').remove();
-      return $(el).text().trim();
-    })
-    .get()
-    .join("\n");
-
-  if (!content.trim()) {
-    content = $("div")
-      .filter((i, el) => {
-        return (
-          $(el).text().trim() !== "" &&
-          !$(el).attr("class") &&
-          !$(el).hasClass("sidebar__language") &&
-          !$(el).hasClass("MsoNormal")
-        );
-      })
-      .map((i, el) => $(el).text().trim())
-      .get()
-      .join("\n");
-  }
-
-  content = content.replace(/INDONESIAN|日本語/g, "").trim();
-
-  const imageUrls = $(".MsoNormal img")
-    .map((i, el) => $(el).attr("src"))
-    .get();
-
-  data.judul = title;
-  data.tanggal = date;
-  data.konten = content;
-  data.gambar = imageUrls.length > 0 ? imageUrls : null;
-
-  return data;
-};
-
-export const fetchNewsData = async () => {
-  // const url = "https://jkt48.com/news/list?lang=id";
-  const url = `${env.FLARE_SOLVER_BASE}/v1`;
-
+/** Fetch the latest news list from the JSON API. */
+export const fetchNewsData = async (): Promise<NewsApiItem[] | null> => {
   try {
-    const response = await axios.post<FlareSolved>(
-      url,
-      {
-        cmd: "request.get",
-        url: "https://jkt48.com/news/list?lang=id",
-        maxTimeout: 60000,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-    const data = response.data.solution.response;
-
-    return data; // Kembalikan HTML ke pemanggil
+    return await jkt48ApiGet<NewsApiItem[]>("news?lang=id");
   } catch (error) {
     const err = error as Error;
-    console.error("Error fetching or parsing news data:", err.message);
-    return null; // Kembalikan null jika terjadi kesalahan
+    console.error("Error fetching news data:", err.message);
+    return null;
   }
 };
 
-export const parseNewsData = (html: string) => {
-  const $ = cheerio.load(html);
-  const data: { berita: News[] } = {
-    berita: [],
-  };
-  const list_berita_mentah = $(".entry-news__list");
-  const data_list_berita: News[] = [];
-  const size_of_berita = list_berita_mentah.length;
-  let position_berita = 0;
+/** Map the API list into the legacy `{ berita: News[] }` shape consumers expect. */
+export const parseNewsData = (items: NewsApiItem[]) => {
+  const berita: News[] = (items ?? []).map((item) => ({
+    berita_id: item.link,
+    judul: item.title,
+    waktu: formatIdDate(item.valid_date_from),
+    badge_url: undefined,
+  }));
 
-  while (position_berita < size_of_berita) {
-    const model: News = {
-      berita_id: "",
-      judul: "",
-      waktu: "",
-      badge_url: "",
+  return { berita };
+};
+
+/** Fetch + map a single article by slug. */
+export const fetchNewsDetail = async (slug: string): Promise<NewsDetails | null> => {
+  try {
+    const detail = await jkt48ApiGet<NewsDetailApi>(`news/${slug}?lang=id`);
+    const result = detail?.result;
+    if (!result) return null;
+
+    const html = result.content_body ?? "";
+    const $ = cheerio.load(html);
+
+    // Plain-text content (the old scraper returned text, not HTML)
+    const konten = $.root()
+      .text()
+      .replace(/ /g, " ")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
+
+    const gambar = $("img")
+      .map((_, el) => $(el).attr("src"))
+      .get()
+      .filter(Boolean);
+
+    return {
+      judul: result.title ?? "",
+      tanggal: formatIdDate(result.valid_date_from),
+      konten,
+      gambar: gambar.length > 0 ? gambar : null,
     };
-
-    const berita_mentah = list_berita_mentah.eq(position_berita);
-
-    const badge_div = berita_mentah.find(".entry-news__list--label");
-    const badge_img = badge_div.find("img");
-    if (badge_img.attr("src")) {
-      model.badge_url = badge_img.attr("src");
-    }
-
-    const title_div = berita_mentah.find(".entry-news__list--item");
-
-    const waktu = title_div.find("time").text();
-    model.waktu = waktu;
-
-    const judul = title_div.find("h3").text();
-    model.judul = judul;
-
-    const url_berita_full = title_div.find("h3").find("a").attr("href");
-    if (url_berita_full) {
-      const url_berita_full_rplc = url_berita_full.replace("?lang=id", "");
-      const url_berita_full_rplc_2 = url_berita_full_rplc.replace("/news/detail/id/", "");
-      model.berita_id = url_berita_full_rplc_2;
-    }
-
-    data_list_berita.push(model);
-    position_berita += 1;
+  } catch (error) {
+    const err = error as Error;
+    console.error("Error fetching news detail:", err.message);
+    return null;
   }
-
-  data.berita = data_list_berita;
-  return data;
-};
-
-export const fetchNewsDetail = async (id: number) => {
-  // const url = `https://jkt48.com/news/detail/id/${id}?lang=id`;
-  const url = `${env.FLARE_SOLVER_BASE}/v1`;
-
-  const response = await axios.post<FlareSolved>(
-    url,
-    {
-      cmd: "request.get",
-      url: `https://jkt48.com/news/detail/id/${id}?lang=id`,
-      maxTimeout: 60000,
-    },
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    },
-  );
-  return parseNewsDetail(response.data.solution.response);
 };

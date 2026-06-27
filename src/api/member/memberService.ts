@@ -1,4 +1,5 @@
 import { env } from "@/common/utils/envConfig";
+import { jkt48ApiGet } from "@/common/utils/jkt48Api";
 import type { FlareSolved } from "@/common/utils/news";
 import axios from "axios";
 import * as cheerio from "cheerio";
@@ -20,85 +21,40 @@ interface MemberDetail {
   profileImage: string;
 }
 
-export const fetchMemberData = async () => {
-  // const url = "https://jkt48.com/member/list?lang=id";
-  const url = `${env.FLARE_SOLVER_BASE}/v1`;
+/** Item shape from GET /api/v1/members */
+interface MemberApiItem {
+  type: string; // team (e.g. "PASSION", "DREAM", "TRAINEE")
+  code: string; // e.g. "ABIGAIL_RACHEL" — used as the id now
+  name: string;
+  nickname: string;
+  photo: string;
+  jkt48_member_id: number;
+}
 
-  const response = await axios.post<FlareSolved>(
-    url,
-    {
-      cmd: "request.get",
-      url: "https://jkt48.com/member/list?lang=id",
-      maxTimeout: 60000,
-    },
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    },
-  );
-  return response.data.solution.response;
+/**
+ * jkt48.com migrated to a Nuxt SPA + JSON API. The member list now comes from
+ *   GET /api/v1/members?lang=id
+ * and members are keyed by a string `code` instead of the old numeric id.
+ */
+export const fetchMemberData = async (): Promise<MemberApiItem[] | null> => {
+  try {
+    return await jkt48ApiGet<MemberApiItem[]>("members?lang=id");
+  } catch (error) {
+    const err = error as Error;
+    console.error("Error fetching member data:", err.message);
+    return null;
+  }
 };
 
-export const parseMemberData = (html: string) => {
-  const $ = cheerio.load(html);
+export const parseMemberData = (items: MemberApiItem[]) => {
+  const member: Member[] = (items ?? []).map((m) => ({
+    nama_member: m.name,
+    id_member: m.code,
+    ava_member: m.photo,
+    kategori: m.type,
+  }));
 
-  const div_main = $(".col-lg-9.order-1.order-lg-2.entry-contents__main-area");
-  const kategori_mentah = div_main.find("h2");
-  const size_of_kategori = kategori_mentah.length;
-  let position_of_kategori = 0;
-  const list_of_kategori = [];
-  const list_member = [];
-
-  while (position_of_kategori < size_of_kategori) {
-    const kategori = kategori_mentah.eq(position_of_kategori).text();
-    list_of_kategori.push(kategori);
-    position_of_kategori += 1;
-  }
-
-  const root_member_all_mentah = div_main.find(".row.row-all-10");
-  const size_of_div_member = root_member_all_mentah.length;
-  let position_of_div_member = 0;
-
-  while (position_of_div_member < size_of_div_member) {
-    const list_div_member = root_member_all_mentah.eq(position_of_div_member).find(".entry-member");
-    const size_of_member = list_div_member.length;
-    let position_of_member = 0;
-
-    while (position_of_member < size_of_member) {
-      const model: Member = {
-        kategori: "",
-        nama_member: "",
-        ava_member: "",
-        id_member: "",
-      };
-      const member = list_div_member.eq(position_of_member);
-
-      const nama_member_mentah = member.find("p").find("a").text();
-      const nama_member = nama_member_mentah.replace(/(\w)([A-Z])/g, "$1 $2");
-      model.nama_member = nama_member;
-
-      const url_member_full = member.find("a").attr("href");
-      const url_member_full_rplc = url_member_full?.replace("?lang=id", "");
-      const url_member_full_rplc_2 = url_member_full_rplc?.replace("/member/detail/id/", "");
-      model.id_member = url_member_full_rplc_2;
-
-      const ava_member_mentah = member.find("a").find("img");
-      if (ava_member_mentah.attr("src")) {
-        const ava_member = ava_member_mentah.attr("src");
-        model.ava_member = ava_member;
-      }
-
-      model.kategori = list_of_kategori[position_of_div_member];
-      list_member.push(model);
-      position_of_member += 1;
-    }
-    position_of_div_member += 1;
-  }
-
-  return {
-    member: list_member,
-  };
+  return { member };
 };
 
 export const fetchMemberDataId = async (memberId: number) => {
