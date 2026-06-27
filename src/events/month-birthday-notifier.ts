@@ -6,6 +6,7 @@ import schedule from "node-schedule";
 import type { Member } from "@/commands/schedule";
 import { CONFIG } from "@/common/utils/constants";
 import db from "@/common/utils/db";
+import { type ParsedBirthday, parseBirthday } from "@/common/utils/memberBirthday";
 
 let membersData: Member[] = [];
 readFile("member.json", "utf8", (err, data) => {
@@ -37,27 +38,20 @@ function getBirthdaysThisMonth() {
   const currentYear = today.getFullYear();
 
   return membersData
-    .filter((member) => {
-      const birthdayMatch = member.description.match(/Birthday:\s*(\d+ \w+ \d+)/);
-      if (birthdayMatch) {
-        const birthday = new Date(`${birthdayMatch[1]} ${currentYear}`);
-        return birthday.getMonth() === currentMonth;
-      } else {
-        console.warn(`❗ Birthday not found for member: ${member.name}`);
-        return false; // Tidak cocok, abaikan member ini
-      }
-    })
     .map((member) => {
-      const birthdayDate: string = member.description.match(/Birthday:\s*(\d+ \w+ \d+)/)?.[1] || "";
-      const birthYear = Number.parseInt(birthdayDate.split(" ")[2]);
-      const age = currentYear - birthYear;
-      return {
-        name: member.name,
-        date: birthdayDate,
-        year: birthYear,
-        age: age,
-      };
-    });
+      const parsed = parseBirthday(member);
+      if (!parsed) {
+        console.warn(`❗ Birthday not found for member: ${member.name}`);
+      }
+      return parsed;
+    })
+    .filter((b): b is ParsedBirthday => b !== null && b.monthIndex === currentMonth)
+    .map((b) => ({
+      name: b.name,
+      date: b.raw,
+      year: b.year,
+      age: currentYear - b.year,
+    }));
 }
 
 async function sendMonthBirthdayNotifications(client: Client) {
