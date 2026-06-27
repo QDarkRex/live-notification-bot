@@ -11,7 +11,7 @@ export const data = new SlashCommandBuilder()
   );
 
 export async function run({ interaction }: SlashCommandProps) {
-  await interaction.deferReply({ ephemeral: true });
+  await interaction.deferReply();
 
   const code = interaction.options.getString("kode", true).trim().toUpperCase();
 
