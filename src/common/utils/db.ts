@@ -79,6 +79,21 @@ const tableSchemas = [
         user_id TEXT,
         guild_id TEXT
     )`,
+
+  `CREATE TABLE IF NOT EXISTS love_letters (
+        letter_id TEXT PRIMARY KEY,
+        member_uuid TEXT,
+        member_username TEXT,
+        member_name TEXT,
+        slug TEXT,
+        recipient_name TEXT,
+        recipient_username TEXT,
+        recipient_uuid TEXT,
+        rank INTEGER,
+        rank_label TEXT,
+        message TEXT,
+        created_at INTEGER
+    )`,
 ];
 
 // Database initialization with error handling
