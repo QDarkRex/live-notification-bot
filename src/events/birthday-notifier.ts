@@ -4,10 +4,17 @@ import { ActionRowBuilder, ButtonBuilder, type Client, EmbedBuilder, TextChannel
 import schedule from "node-schedule";
 
 import type { Member } from "@/commands/schedule";
-import type { Birthday } from "@/common/utils/birthday";
 import { CONFIG } from "@/common/utils/constants";
 import db from "@/common/utils/db";
-import { env } from "@/common/utils/envConfig";
+import { memberProfileUrl, membersBirthdayToday } from "@/common/utils/memberBirthday";
+
+/** Local view of a member with a birthday today, derived from member.json. */
+interface Birthday {
+  name: string;
+  birthday: string; // "6 Agustus 2008"
+  profileLink: string; // absolute URL (social) or ""
+  imgSrc: string;
+}
 
 let membersData: Member[] = [];
 readFile("member.json", "utf8", (err, data) => {
@@ -18,18 +25,25 @@ readFile("member.json", "utf8", (err, data) => {
   membersData = JSON.parse(data);
 });
 
-async function fetchBirthdays() {
-  try {
-    const response = await axios.get<Birthday[]>(`http://${env.HOST}:${env.PORT}/birthdays`);
-    return response.data;
-  } catch (error) {
-    return [];
-  }
+/**
+ * Today's birthdays, computed from the bundled member.json (the jkt48.com
+ * birthday widget is no longer scrapeable after the Nuxt rewrite).
+ */
+function getTodaysBirthdays(): Birthday[] {
+  return membersBirthdayToday(membersData).map((b) => {
+    const member = membersData.find((m) => m.name === b.name);
+    return {
+      name: b.name,
+      birthday: b.raw,
+      profileLink: member ? memberProfileUrl(member) : "",
+      imgSrc: member?.img_alt ?? "",
+    };
+  });
 }
 
 function createBirthdayEmbed(member: Birthday) {
   const memberData = membersData.find((m) => m.name === member.name);
-  const imgAlt = memberData ? memberData.img_alt : "";
+  const imgAlt = memberData ? memberData.img_alt : member.imgSrc;
 
   const birthYear = Number(member.birthday.split(" ").pop() || 0);
   const currentYear = new Date().getFullYear();
@@ -48,30 +62,16 @@ function createBirthdayEmbed(member: Birthday) {
   return embed;
 }
 
-function memberButton(member: Birthday) {
-  const button = new ButtonBuilder()
-    .setLabel("Profile Member")
-    .setURL(`https://jkt48.com${member.profileLink}`)
-    .setStyle(5);
+/** Profile button, only when we have a valid absolute URL. */
+function memberButton(member: Birthday): ActionRowBuilder<ButtonBuilder> | null {
+  if (!member.profileLink.startsWith("http")) return null;
 
-  const buttons = new ActionRowBuilder<ButtonBuilder>().addComponents(button);
-
-  return buttons;
+  const button = new ButtonBuilder().setLabel("Profile Member").setURL(member.profileLink).setStyle(5);
+  return new ActionRowBuilder<ButtonBuilder>().addComponents(button);
 }
 
 async function sendBirthdayNotifications(client: Client) {
-  const birthdays = await fetchBirthdays();
-  const today = new Date();
-  const todayDayMonth = `${Number.parseInt(
-    `${today.getDate()}`,
-    10,
-  )} ${today.toLocaleString("id-ID", { month: "long" })}`;
-
-  const todayBirthdays = birthdays.filter((member) => {
-    const birthdayParts = member.birthday.split(" ");
-    const birthdayDayMonth = `${Number.parseInt(birthdayParts[0], 10)} ${birthdayParts[1]}`;
-    return birthdayDayMonth === todayDayMonth;
-  });
+  const todayBirthdays = getTodaysBirthdays();
 
   if (todayBirthdays.length === 0) {
     return null;
@@ -95,7 +95,7 @@ async function sendBirthdayNotifications(client: Client) {
               const buttons = memberButton(member);
               await channel.send({
                 embeds: [embed],
-                components: [buttons],
+                components: buttons ? [buttons] : [],
               });
               handledGuilds.add(guild_id);
             }
@@ -123,7 +123,7 @@ async function sendBirthdayNotifications(client: Client) {
                 const buttons = memberButton(member);
                 await channel.send({
                   embeds: [embed],
-                  components: [buttons],
+                  components: buttons ? [buttons] : [],
                 });
               }
             }
@@ -154,7 +154,7 @@ async function sendBirthdayNotifications(client: Client) {
           await axios.post(webhook.url, {
             content: null,
             embeds: [embed.toJSON()],
-            components: [buttons.toJSON()],
+            components: buttons ? [buttons.toJSON()] : [],
             username: CONFIG.webhook.name,
             avatar_url: CONFIG.webhook.avatar,
           });
