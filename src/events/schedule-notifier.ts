@@ -44,6 +44,11 @@ async function sendScheduleNotifications(client: Client) {
 
   const fields = [];
 
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Juni", "Juli", "Agt", "Sept", "Okt", "Nov", "Des"];
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  let anyFieldHasMembers = false;
+
   for (const schedule of schedules) {
     const existsInDatabase = await checkScheduleExists(schedule.showInfo, schedule.members);
     if (existsInDatabase) {
@@ -60,7 +65,6 @@ async function sendScheduleNotifications(client: Client) {
       continue;
     }
 
-    const dayOfWeek = dateParts[0];
     const dayAndMonthYear = dateParts[1].split(".");
     if (dayAndMonthYear.length < 3) {
       console.error("❗ Invalid date format:", dateParts[1]);
@@ -71,15 +75,24 @@ async function sendScheduleNotifications(client: Client) {
     const monthIndex = Number.parseInt(dayAndMonthYear[1], 10) - 1;
     const year = dayAndMonthYear[2].trim();
 
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Juni", "Juli", "Agt", "Sept", "Okt", "Nov", "Des"];
-    const monthName = monthNames[monthIndex];
+    // Always save to DB so past shows are never re-sent
+    await saveScheduleToDatabase(schedule.setlist, schedule.showInfo, schedule.members);
 
+    // Skip shows that have already passed
+    const showDate = new Date(Number(year), monthIndex, Number(day));
+    if (showDate < today) {
+      continue;
+    }
+
+    const monthName = monthNames[monthIndex];
     const memberNicknames = schedule.members
       .map(getNickname)
       .filter((nickname) => nickname)
       .join(", ");
 
     const birthday = schedule.birthday || "";
+
+    if (memberNicknames) anyFieldHasMembers = true;
 
     fields.push({
       name: schedule.setlist,
@@ -89,18 +102,12 @@ async function sendScheduleNotifications(client: Client) {
       inline: false,
     });
 
-    await saveScheduleToDatabase(schedule.setlist, schedule.showInfo, schedule.members);
     hasNewSchedules = true;
   }
 
   if (hasNewSchedules) {
-    const existingSchedules = await getExistingSchedulesFromDatabase();
-    const hasMembers = schedules.some((schedule) => {
-      return schedule.members.length > 0;
-    });
-
     embed.setTitle(
-      hasMembers
+      anyFieldHasMembers
         ? "Berikut adalah list member yang akan tampil pada show yang akan datang."
         : "Berikut adalah jadwal show yang akan datang.",
     );
