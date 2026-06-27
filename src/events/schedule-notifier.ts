@@ -19,7 +19,7 @@ readFile("member.json", "utf8", (err, data) => {
 
 function getNickname(name: string) {
   const member = membersData.find((m) => m.name === name);
-  return member && member.nicknames.length > 0 ? member.nicknames[0] : null;
+  return member?.nicknames[0] ?? name;
 }
 
 async function sendScheduleNotifications(client: Client) {
@@ -85,10 +85,7 @@ async function sendScheduleNotifications(client: Client) {
     }
 
     const monthName = monthNames[monthIndex];
-    const memberNicknames = schedule.members
-      .map(getNickname)
-      .filter((nickname) => nickname)
-      .join(", ");
+    const memberNicknames = schedule.members.map(getNickname).join(", ");
 
     const birthday = schedule.birthday || "";
 

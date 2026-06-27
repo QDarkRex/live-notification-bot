@@ -20,7 +20,7 @@ readFile("member.json", "utf8", (err, data) => {
 
 function getNickname(name: string) {
   const member = membersData.find((m) => m.name === name);
-  return member && member.nicknames.length > 0 ? member.nicknames[0] : null;
+  return member?.nicknames[0] ?? name;
 }
 
 async function fetchShowSchedule() {
@@ -98,10 +98,7 @@ function createCombinedEmbed(
       )} ${monthNames[Number.parseInt(dateParts[1], 10) - 1]} ${dateParts[2]}`;
 
       const birthday = schedule.birthday || "";
-      const memberNicknames = schedule.members
-        .map(getNickname)
-        .filter((nickname) => nickname)
-        .join(", ");
+      const memberNicknames = schedule.members.map(getNickname).join(", ");
 
       showDescriptions += `- **${schedule.setlist}** \n🕒 ${timePart} \n🗓️ ${formattedDate}${
         birthday ? ` \n🎂 ${birthday}` : ""
