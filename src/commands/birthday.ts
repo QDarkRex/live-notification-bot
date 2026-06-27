@@ -1,45 +1,56 @@
-import type { Birthday } from "@/common/utils/birthday";
-import { env } from "@/common/utils/envConfig";
-import axios from "axios";
+import { readFileSync } from "node:fs";
 import type { SlashCommandProps } from "commandkit";
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 
+import type { Member } from "@/commands/schedule";
+import { parseBirthday } from "@/common/utils/memberBirthday";
+
 export const data = new SlashCommandBuilder()
   .setName("birthday")
-  .setDescription("Menampilkan data ulang tahun member JKT48");
+  .setDescription("Menampilkan 10 ulang tahun member JKT48 yang akan datang");
+
+function daysUntil(monthIndex: number, day: number, today: Date): number {
+  const thisYear = today.getFullYear();
+  const next = new Date(thisYear, monthIndex, day);
+  if (next < today) next.setFullYear(thisYear + 1);
+  return Math.round((next.getTime() - today.getTime()) / 86400000);
+}
 
 export async function run({ interaction }: SlashCommandProps) {
-  await interaction.deferReply({ ephemeral: true });
+  await interaction.deferReply();
   try {
-    const response = await axios.get<Birthday[]>(`http://${env.HOST}:${env.PORT}/birthdays`);
-    const birthdays = response.data;
+    const members: Member[] = JSON.parse(readFileSync("member.json", "utf8"));
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-    if (birthdays.length === 0) {
-      return interaction.reply({
-        content: "Tidak ada data ulang tahun member yang tersedia.",
-        ephemeral: true,
-      });
+    const upcoming = members
+      .map((m) => {
+        const b = parseBirthday(m);
+        if (!b) return null;
+        return { ...b, daysLeft: daysUntil(b.monthIndex, b.day, today) };
+      })
+      .filter((b): b is NonNullable<typeof b> => b !== null)
+      .sort((a, b) => a.daysLeft - b.daysLeft)
+      .slice(0, 10);
+
+    if (upcoming.length === 0) {
+      return interaction.editReply({ content: "Tidak ada data ulang tahun yang tersedia." });
     }
 
-    const embed = new EmbedBuilder().setTitle("Data Ulang Tahun Member Selanjutnya").setColor("#ff0000");
+    const embed = new EmbedBuilder()
+      .setTitle("🎂 Ulang Tahun Member JKT48 Berikutnya")
+      .setColor("#ff0000")
+      .setFooter({ text: "Birthday JKT48 | JKT48 Live Notification" });
 
-    birthdays.forEach((member) => {
-      const birthYear = Number(member.birthday.split(" ").pop() || "0");
-      const currentYear = new Date().getFullYear();
-      const age = currentYear - birthYear;
-
-      embed.addFields({
-        name: member.name,
-        value: `📅 **${member.birthday}**\n🎂 Ulang tahun ke-${age}\n🔗 [Profile Member](https://jkt48.com${member.profileLink})\n`,
-        inline: false,
-      });
-    });
+    for (const b of upcoming) {
+      const age = today.getFullYear() - b.year + (b.daysLeft === 0 ? 0 : 1);
+      const label = b.daysLeft === 0 ? "🎉 Hari ini!" : `${b.daysLeft} hari lagi`;
+      embed.addFields({ name: b.name, value: `📅 ${b.raw} • ke-${age} • ${label}`, inline: false });
+    }
 
     await interaction.editReply({ embeds: [embed] });
   } catch (error) {
     console.error("Error fetching birthdays:", error);
-    await interaction.editReply({
-      content: "Terjadi kesalahan saat mengambil data ulang tahun.",
-    });
+    await interaction.editReply({ content: "Terjadi kesalahan saat mengambil data ulang tahun." });
   }
 }
