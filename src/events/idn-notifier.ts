@@ -207,6 +207,11 @@ function createEmbed(stream: Result) {
         value: `[IDN Web](https://www.idn.app/${stream.creator.username}/live/${stream.slug})`,
         inline: true,
       },
+      {
+        name: "Kode Sesi (untuk /loveletter)",
+        value: `\`${stream.slug}\``,
+        inline: false,
+      },
     )
     .setFooter({
       text: "IDNLive JKT48 | JKT48 Live Notification",
@@ -233,6 +238,11 @@ function createEndLiveEmbed(user: any) {
         name: "Followers",
         value: `${follower_count}`,
         inline: true,
+      },
+      {
+        name: "Kode Sesi (untuk /loveletter)",
+        value: `\`${user.slug}\``,
+        inline: false,
       },
     )
     .setFooter({
