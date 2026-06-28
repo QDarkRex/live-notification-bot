@@ -1,4 +1,18 @@
 -- Import manually-captured love letters (Virgi + Levi). Idempotent.
+CREATE TABLE IF NOT EXISTS love_letters (
+  letter_id TEXT PRIMARY KEY,
+  member_uuid TEXT,
+  member_username TEXT,
+  member_name TEXT,
+  slug TEXT,
+  recipient_name TEXT,
+  recipient_username TEXT,
+  recipient_uuid TEXT,
+  rank INTEGER,
+  rank_label TEXT,
+  message TEXT,
+  created_at INTEGER
+);
 BEGIN;
 INSERT OR IGNORE INTO love_letters (letter_id, member_uuid, member_username, member_name, slug, recipient_name, recipient_username, recipient_uuid, rank, rank_label, message, created_at) VALUES ('47d26642-231f-4dcc-9edd-c9d761049e22', '147e83c8-f3ac-4680-9141-2f518b4b7810', 'jkt48_virgi', 'Virgi JKT48', 'ayo-ngobrol-bareng-260627224024', 'sahiraa .', 'als-9xzm7zfbz48ig6r', 'f21e002a-3fa2-43b7-a62c-1b3fd86d1a28', 3, 'Top Gifter #3', 'maakasih ka sahira gimana kabarnya??, jaga kesehatan ya', 1782580751);
 INSERT OR IGNORE INTO love_letters (letter_id, member_uuid, member_username, member_name, slug, recipient_name, recipient_username, recipient_uuid, rank, rank_label, message, created_at) VALUES ('8334d196-2d2b-419f-a53c-6aceecfeb81e', '147e83c8-f3ac-4680-9141-2f518b4b7810', 'jkt48_virgi', 'Virgi JKT48', 'ayo-ngobrol-bareng-260627224024', 'alya nenek virgi only', 'aly-2mgz5z44i31paq', '7aff90ba-3176-49a4-81ed-ba1a5e549800', 2, 'Top Gifter #2', 'woi bocil makasih, nabung plise', 1782580767);
