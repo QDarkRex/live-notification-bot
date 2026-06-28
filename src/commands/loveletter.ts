@@ -13,6 +13,7 @@ import {
 export const data = new SlashCommandBuilder()
   .setName("loveletter")
   .setDescription("(Admin) Lihat love letter dari live IDN, per sesi live")
+  .setDefaultMemberPermissions(0)
   .addStringOption((o) =>
     o.setName("member").setDescription("Filter nama/username member (opsional)").setRequired(false),
   )

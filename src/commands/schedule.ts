@@ -69,7 +69,6 @@ export async function run({ interaction }: SlashCommandProps) {
     if (schedules.length === 0) {
       return interaction.reply({
         content: "Tidak ada jadwal show yang tersedia.",
-        ephemeral: true,
       });
     }
 
@@ -114,7 +113,7 @@ export async function run({ interaction }: SlashCommandProps) {
       });
     });
 
-    await interaction.reply({ embeds: [embed], ephemeral: true });
+    await interaction.reply({ embeds: [embed] });
   } catch (error) {
     console.error("Error fetching schedules:", error);
     await interaction.reply({
