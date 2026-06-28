@@ -1,12 +1,5 @@
 import type { SlashCommandProps } from "commandkit";
-import {
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  EmbedBuilder,
-  MessageFlags,
-  SlashCommandBuilder,
-} from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 
 export const data = new SlashCommandBuilder()
   .setName("help")
@@ -77,6 +70,5 @@ export async function run({ interaction, client }: SlashCommandProps) {
   await interaction.reply({
     embeds: [setupEmbed, infoEmbed],
     components: [links],
-    flags: MessageFlags.Ephemeral,
   });
 }
