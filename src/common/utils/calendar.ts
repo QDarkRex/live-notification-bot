@@ -96,7 +96,16 @@ async function fetchMonthSchedule(month: number, year: number): Promise<Schedule
 export const getSchedule = async (): Promise<EnrichedShow[] | null> => {
   try {
     const now = new Date();
-    const items = await fetchMonthSchedule(now.getMonth() + 1, now.getFullYear());
+    const curMonth = now.getMonth() + 1;
+    const curYear = now.getFullYear();
+    const nextMonth = curMonth === 12 ? 1 : curMonth + 1;
+    const nextYear = curMonth === 12 ? curYear + 1 : curYear;
+
+    const [curItems, nextItems] = await Promise.all([
+      fetchMonthSchedule(curMonth, curYear),
+      fetchMonthSchedule(nextMonth, nextYear),
+    ]);
+    const items = [...(curItems ?? []), ...(nextItems ?? [])];
     const shows = items.filter((i) => i.type === "SHOW");
 
     const enriched = await Promise.all(
@@ -161,7 +170,16 @@ function eventUrlFor(item: ScheduleApiItem): string {
 export const fetchScheduleSectionData = async (): Promise<ScheduleApiItem[] | null> => {
   try {
     const now = new Date();
-    const items = await fetchMonthSchedule(now.getMonth() + 1, now.getFullYear());
+    const curMonth = now.getMonth() + 1;
+    const curYear = now.getFullYear();
+    const nextMonth = curMonth === 12 ? 1 : curMonth + 1;
+    const nextYear = curMonth === 12 ? curYear + 1 : curYear;
+
+    const [curItems, nextItems] = await Promise.all([
+      fetchMonthSchedule(curMonth, curYear),
+      fetchMonthSchedule(nextMonth, nextYear),
+    ]);
+    const items = [...(curItems ?? []), ...(nextItems ?? [])];
     return items.filter((i) => i.type === "EVENT" || i.type === "EXCLUSIVE");
   } catch (error) {
     const err = error as Error;
