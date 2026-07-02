@@ -208,7 +208,7 @@ function createEmbed(stream: Result) {
         inline: true,
       },
       {
-        name: "Kode Sesi (untuk /loveletter)",
+        name: "​",
         value: `\`${stream.slug}\``,
         inline: false,
       },
@@ -240,7 +240,7 @@ function createEndLiveEmbed(user: any) {
         inline: true,
       },
       {
-        name: "Kode Sesi (untuk /loveletter)",
+        name: "​",
         value: `\`${user.slug}\``,
         inline: false,
       },

@@ -46,6 +46,7 @@ function getBirthdaysThisMonth() {
       return parsed;
     })
     .filter((b): b is ParsedBirthday => b !== null && b.monthIndex === currentMonth)
+    .sort((a, b) => a.day - b.day)
     .map((b) => ({
       name: b.name,
       date: b.raw,

@@ -111,7 +111,6 @@ async function initializeBot() {
       const eventFiles = [
         `./events/showroom-notifier${env.isProduction ? ".js" : ""}`,
         `./events/idn-notifier${env.isProduction ? ".js" : ""}`,
-        `./events/love-letter${env.isProduction ? ".js" : ""}`,
         `./events/news-notifier${env.isProduction ? ".js" : ""}`,
         `./events/birthday-notifier${env.isProduction ? ".js" : ""}`,
         `./events/schedule-notifier${env.isProduction ? ".js" : ""}`,

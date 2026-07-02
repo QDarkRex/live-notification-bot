@@ -20,7 +20,7 @@ readFile("member.json", "utf8", (err, data) => {
 
 function getNickname(name: string) {
   const member = membersData.find((m) => m.name === name);
-  return member && member.nicknames.length > 0 ? member.nicknames[0] : null;
+  return member?.nicknames[0] ?? name;
 }
 
 async function fetchShowSchedule() {

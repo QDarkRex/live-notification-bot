@@ -111,7 +111,8 @@ async function sendScheduleNotifications(client: Client) {
   }
 
   if (hasNewSchedules) {
-    embed.addFields(fields);
+    // Discord embeds allow at most 25 fields; cap to stay within the limit.
+    embed.addFields(fields.slice(0, 25));
 
     const handledGuilds = new Set();
 

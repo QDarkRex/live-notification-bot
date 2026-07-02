@@ -90,22 +90,42 @@ async function fetchMonthSchedule(month: number, year: number): Promise<Schedule
 }
 
 /**
+ * Fetch the current month plus the next month, so shows for next month appear
+ * before the 1st (e.g. July shows are visible in late June).
+ *
+ * Done SEQUENTIALLY and fault-tolerant per month: a single month failing (a
+ * Cloudflare challenge on the 2nd request, a transient API error, etc.) must
+ * never null out the whole schedule — we return whatever months succeeded.
+ */
+async function fetchCurrentAndNextMonth(): Promise<ScheduleApiItem[]> {
+  const now = new Date();
+  const curMonth = now.getMonth() + 1;
+  const curYear = now.getFullYear();
+  const nextMonth = curMonth === 12 ? 1 : curMonth + 1;
+  const nextYear = curMonth === 12 ? curYear + 1 : curYear;
+
+  const out: ScheduleApiItem[] = [];
+  for (const [m, y] of [
+    [curMonth, curYear],
+    [nextMonth, nextYear],
+  ] as const) {
+    try {
+      const items = await fetchMonthSchedule(m, y);
+      if (Array.isArray(items)) out.push(...items);
+    } catch (err) {
+      console.error(`[schedule] month ${m}/${y} fetch failed:`, (err as Error).message);
+    }
+  }
+  return out;
+}
+
+/**
  * Fetch theater shows for the current month, enriched with each show's member
  * lineup (via the per-show detail endpoint).
  */
 export const getSchedule = async (): Promise<EnrichedShow[] | null> => {
   try {
-    const now = new Date();
-    const curMonth = now.getMonth() + 1;
-    const curYear = now.getFullYear();
-    const nextMonth = curMonth === 12 ? 1 : curMonth + 1;
-    const nextYear = curMonth === 12 ? curYear + 1 : curYear;
-
-    const [curItems, nextItems] = await Promise.all([
-      fetchMonthSchedule(curMonth, curYear),
-      fetchMonthSchedule(nextMonth, nextYear),
-    ]);
-    const items = [...(curItems ?? []), ...(nextItems ?? [])];
+    const items = await fetchCurrentAndNextMonth();
     const shows = items.filter((i) => i.type === "SHOW");
 
     const enriched = await Promise.all(
@@ -169,17 +189,7 @@ function eventUrlFor(item: ScheduleApiItem): string {
  */
 export const fetchScheduleSectionData = async (): Promise<ScheduleApiItem[] | null> => {
   try {
-    const now = new Date();
-    const curMonth = now.getMonth() + 1;
-    const curYear = now.getFullYear();
-    const nextMonth = curMonth === 12 ? 1 : curMonth + 1;
-    const nextYear = curMonth === 12 ? curYear + 1 : curYear;
-
-    const [curItems, nextItems] = await Promise.all([
-      fetchMonthSchedule(curMonth, curYear),
-      fetchMonthSchedule(nextMonth, nextYear),
-    ]);
-    const items = [...(curItems ?? []), ...(nextItems ?? [])];
+    const items = await fetchCurrentAndNextMonth();
     return items.filter((i) => i.type === "EVENT" || i.type === "EXCLUSIVE");
   } catch (error) {
     const err = error as Error;

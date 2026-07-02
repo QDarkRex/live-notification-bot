@@ -23,17 +23,27 @@ export async function run({ interaction }: SlashCommandProps) {
     const nowYear = new Date().getFullYear();
     const embed = new EmbedBuilder().setTitle("Jadwal Event Offair yang Akan Datang").setColor("#FF0000");
 
-    eventSections.forEach((section) => {
+    // Discord embeds allow at most 25 fields; we now fetch two months of events,
+    // so cap the total to stay within the limit.
+    const MAX_FIELDS = 25;
+    let count = 0;
+    for (const section of eventSections) {
       const { hari, tanggal, bulan, events } = section;
-
-      events.forEach((event) => {
+      for (const event of events) {
+        if (count >= MAX_FIELDS) break;
         embed.addFields({
           name: event.eventName,
           value: `🗓️ ${hari} ${tanggal}/${bulan}/${nowYear}\n🔗 [Link Event](https:jkt48.com${event.eventUrl})`,
           inline: false,
         });
-      });
-    });
+        count++;
+      }
+      if (count >= MAX_FIELDS) break;
+    }
+
+    if (count === 0) {
+      return interaction.editReply({ content: "Tidak ada event yang tersedia." });
+    }
 
     await interaction.editReply({ embeds: [embed] });
   } catch (error) {
