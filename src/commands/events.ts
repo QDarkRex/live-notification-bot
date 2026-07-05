@@ -1,18 +1,18 @@
-import axios from "axios";
+import { fetchScheduleSectionData, parseScheduleSectionData } from "@/common/utils/calendar";
 import type { SlashCommandProps } from "commandkit";
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 
-import type { ParsedSchedule } from "@/common/utils/calendar";
-import { env } from "@/common/utils/envConfig";
-
 export const data = new SlashCommandBuilder().setName("events").setDescription("Menampilkan jadwal event offair JKT48");
+
+function eventDetailUrl(path: string | undefined): string {
+  return new URL(path ?? "/schedule/theater", "https://jkt48.com").toString();
+}
 
 export async function run({ interaction }: SlashCommandProps) {
   await interaction.deferReply({ ephemeral: true });
   try {
-    // Fetch data from the API
-    const response = await axios.get<ParsedSchedule[]>(`http://${env.HOST}:${env.PORT}/schedule/section`);
-    const eventSections = response.data;
+    const eventData = await fetchScheduleSectionData();
+    const eventSections = parseScheduleSectionData(eventData ?? []);
 
     if (!eventSections || eventSections.length === 0) {
       return interaction.editReply({
@@ -31,9 +31,10 @@ export async function run({ interaction }: SlashCommandProps) {
       const { hari, tanggal, bulan, events } = section;
       for (const event of events) {
         if (count >= MAX_FIELDS) break;
+        const detailUrl = eventDetailUrl(event.eventUrl);
         embed.addFields({
           name: event.eventName,
-          value: `🗓️ ${hari} ${tanggal}/${bulan}/${nowYear}\n🔗 [Link Event](https:jkt48.com${event.eventUrl})`,
+          value: `Tanggal: ${hari} ${tanggal} ${bulan} ${nowYear}\nLink Event: ${detailUrl}`,
           inline: false,
         });
         count++;
@@ -47,7 +48,7 @@ export async function run({ interaction }: SlashCommandProps) {
 
     await interaction.editReply({ embeds: [embed] });
   } catch (error) {
-    console.error("Error fetching events:", JSON.stringify(error));
+    console.error("Error fetching events:", error);
     await interaction.editReply({
       content: "Terjadi kesalahan saat mengambil data event.",
     });

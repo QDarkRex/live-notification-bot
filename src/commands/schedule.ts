@@ -1,7 +1,5 @@
 import { readFile } from "node:fs";
-import type { Schedule } from "@/common/utils/calendar";
-import { env } from "@/common/utils/envConfig";
-import axios from "axios";
+import { getSchedule, parseScheduleData } from "@/common/utils/calendar";
 import type { SlashCommandProps } from "commandkit";
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 
@@ -64,12 +62,14 @@ function getNickname(name: string) {
 }
 
 export async function run({ interaction }: SlashCommandProps) {
+  await interaction.deferReply();
+
   try {
-    const response = await axios.get<Schedule[]>(`http://${env.HOST}:${env.PORT}/schedule`);
-    const schedules = response.data;
+    const showData = await getSchedule();
+    const schedules = parseScheduleData(showData ?? []);
 
     if (schedules.length === 0) {
-      return interaction.reply({
+      return interaction.editReply({
         content: "Tidak ada jadwal show yang tersedia.",
       });
     }
@@ -99,7 +99,7 @@ export async function run({ interaction }: SlashCommandProps) {
       .slice(0, 25);
 
     if (upcoming.length === 0) {
-      return interaction.reply({ content: "Tidak ada jadwal show yang akan datang." });
+      return interaction.editReply({ content: "Tidak ada jadwal show yang akan datang." });
     }
 
     for (const { schedule, time, day, month, year } of upcoming) {
@@ -119,12 +119,11 @@ export async function run({ interaction }: SlashCommandProps) {
       });
     }
 
-    await interaction.reply({ embeds: [embed] });
+    await interaction.editReply({ embeds: [embed] });
   } catch (error) {
     console.error("Error fetching schedules:", error);
-    await interaction.reply({
+    await interaction.editReply({
       content: "Terjadi kesalahan saat mengambil data jadwal.",
-      ephemeral: true,
     });
   }
 }
