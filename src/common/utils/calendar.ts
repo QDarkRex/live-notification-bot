@@ -84,9 +84,43 @@ function ymd(dateStr: string): { y: number; m: number; d: number; dayName: strin
   return { y, m, d, dayName };
 }
 
+/**
+ * Both the schedule-notifier and today-schedule-notifier poll every 60s, and
+ * /schedule + /events each pull the full current+next month listing plus a
+ * per-show detail call for every show. Without caching this hammers jkt48.com
+ * with thousands of requests/hour, which is what got the VPS IP Cloudflare-
+ * banned in 2026-08. Cache both layers: the month listing rarely changes
+ * within a few minutes, and a show's member lineup rarely changes at all
+ * once published.
+ */
+const MONTH_CACHE_TTL_MS = 5 * 60 * 1000;
+const SHOW_DETAIL_CACHE_TTL_MS = 60 * 60 * 1000;
+
+const monthCache = new Map<string, { data: ScheduleApiItem[]; expiresAt: number }>();
+const showDetailCache = new Map<string, { data: TheaterShowApi; expiresAt: number }>();
+
 async function fetchMonthSchedule(month: number, year: number): Promise<ScheduleApiItem[]> {
   const mm = String(month).padStart(2, "0");
-  return jkt48ApiGet<ScheduleApiItem[]>(`schedules?lang=id&month=${mm}&year=${year}`);
+  const key = `${year}-${mm}`;
+  const cached = monthCache.get(key);
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.data;
+  }
+
+  const data = await jkt48ApiGet<ScheduleApiItem[]>(`schedules?lang=id&month=${mm}&year=${year}`);
+  monthCache.set(key, { data, expiresAt: Date.now() + MONTH_CACHE_TTL_MS });
+  return data;
+}
+
+async function fetchShowDetail(referenceCode: string): Promise<TheaterShowApi> {
+  const cached = showDetailCache.get(referenceCode);
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.data;
+  }
+
+  const data = await jkt48ApiGet<TheaterShowApi>(`theater-shows/${referenceCode}?lang=id`);
+  showDetailCache.set(referenceCode, { data, expiresAt: Date.now() + SHOW_DETAIL_CACHE_TTL_MS });
+  return data;
 }
 
 /**
@@ -135,7 +169,7 @@ export const getSchedule = async (): Promise<EnrichedShow[] | null> => {
 
         if (s.reference_code) {
           try {
-            const detail = await jkt48ApiGet<TheaterShowApi>(`theater-shows/${s.reference_code}?lang=id`);
+            const detail = await fetchShowDetail(s.reference_code);
             members = (detail.jkt48_member ?? []).map((m) => m.name);
             const bdays = detail.birthday_member_name ?? [];
             birthday = bdays.length > 0 ? bdays : null;
