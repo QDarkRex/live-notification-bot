@@ -80,6 +80,20 @@
     "idn_username": "jkt48_delynn"
   },
   {
+    "name": "Afera Thalia",
+    "nicknames": ["Fera"],
+    "img_alt": "https://jkt48.com/api/v1/storages/media/jkt48-member/afera_thalia.jpg",
+    "url": "fera",
+    "video_perkenalan": "",
+    "group": "jkt48",
+    "height": "160cm",
+    "jikosokai": "",
+    "description": "📌 Name: Afera Thalia\r\n🎂 Birthday: 20 Oktober 2012\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Libra",
+    "socials": [],
+    "is_graduate": false,
+    "generation": "Trainee"
+  },
+  {
     "name": "Astrella Virgiananda",
     "nicknames": ["Virgi"],
     "img_alt": "https://res.cloudinary.com/dlx2zm7ha/image/upload/v1733057706/llqfytdqmbusf76qspdt.jpg",
@@ -119,6 +133,62 @@
     "generation": "Gen 13"
   },
   {
+    "name": "Carissa Dini",
+    "nicknames": ["Carissa"],
+    "img_alt": "https://jkt48.com/api/v1/storages/media/jkt48-member/carissa_dini.jpg",
+    "url": "carissa",
+    "video_perkenalan": "",
+    "group": "jkt48",
+    "height": "154cm",
+    "jikosokai": "",
+    "description": "📌 Name: Carissa Dini\r\n🎂 Birthday: 2 Februari 2012\r\n🩸 Blood type: A\r\n🏹 Zodiac signs: Aquarius",
+    "socials": [],
+    "is_graduate": false,
+    "generation": "Trainee"
+  },
+  {
+    "name": "Christabella Bonita",
+    "nicknames": ["Bella"],
+    "img_alt": "https://jkt48.com/api/v1/storages/media/jkt48-member/christabella_bonita.jpg",
+    "url": "bella",
+    "video_perkenalan": "",
+    "group": "jkt48",
+    "height": "161cm",
+    "jikosokai": "",
+    "description": "📌 Name: Christabella Bonita\r\n🎂 Birthday: 2 Maret 2011\r\n🩸 Blood type: A\r\n🏹 Zodiac signs: Pisces",
+    "socials": [],
+    "is_graduate": false,
+    "generation": "Trainee"
+  },
+  {
+    "name": "Fahira Putri",
+    "nicknames": ["Fahira"],
+    "img_alt": "https://jkt48.com/api/v1/storages/media/jkt48-member/fahira_putri.jpg",
+    "url": "fahira",
+    "video_perkenalan": "",
+    "group": "jkt48",
+    "height": "152cm",
+    "jikosokai": "",
+    "description": "📌 Name: Fahira Putri\r\n🎂 Birthday: 13 Agustus 2012\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Leo",
+    "socials": [],
+    "is_graduate": false,
+    "generation": "Trainee"
+  },
+  {
+    "name": "Fatimah Azzahra",
+    "nicknames": ["Rara"],
+    "img_alt": "https://jkt48.com/api/v1/storages/media/jkt48-member/fatimah_azzahra.jpg",
+    "url": "rara",
+    "video_perkenalan": "",
+    "group": "jkt48",
+    "height": "170cm",
+    "jikosokai": "",
+    "description": "📌 Name: Fatimah Azzahra\r\n🎂 Birthday: 30 Agustus 2010\r\n🩸 Blood type: AB\r\n🏹 Zodiac signs: Virgo",
+    "socials": [],
+    "is_graduate": false,
+    "generation": "Trainee"
+  },
+  {
     "name": "Hagia Sopia",
     "nicknames": ["Giaa"],
     "img_alt": "https://res.cloudinary.com/dlx2zm7ha/image/upload/v1733058219/zzuyns4fvc9frimjb9gm.jpg",
@@ -130,6 +200,20 @@
     "description": "📌 Name: Hagia Sopia\r\n🎂 Birthday: 1 Juli 2008\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Cancer",
     "is_graduate": false,
     "generation": "Gen 13"
+  },
+  {
+    "name": "Heidi Suyangga",
+    "nicknames": ["Heidi"],
+    "img_alt": "https://jkt48.com/api/v1/storages/media/jkt48-member/heidi_suyangga.jpg",
+    "url": "heidi",
+    "video_perkenalan": "",
+    "group": "jkt48",
+    "height": "164cm",
+    "jikosokai": "",
+    "description": "📌 Name: Heidi Suyangga\r\n🎂 Birthday: 27 Agustus 2008\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Virgo",
+    "socials": [],
+    "is_graduate": false,
+    "generation": "Trainee"
   },
   {
     "name": "Humaira Ramadhani",
@@ -169,6 +253,20 @@
     "description": "📌 Name: Jemima Evodie\r\n🎂 Birthday: 9 November 2009\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Scorpio",
     "is_graduate": false,
     "generation": "Gen 13"
+  },
+  {
+    "name": "Maxine Faye",
+    "nicknames": ["Maxine"],
+    "img_alt": "https://jkt48.com/api/v1/storages/media/jkt48-member/maxine_faye_lee.jpg",
+    "url": "maxine",
+    "video_perkenalan": "",
+    "group": "jkt48",
+    "height": "164cm",
+    "jikosokai": "",
+    "description": "📌 Name: Maxine Faye\r\n🎂 Birthday: 2 Desember 2011\r\n🩸 Blood type: B\r\n🏹 Zodiac signs: Sagittarius",
+    "socials": [],
+    "is_graduate": false,
+    "generation": "Trainee"
   },
   {
     "name": "Mikaela Kusjanto",
@@ -1877,6 +1975,20 @@
     "idn_username": "jkt48_oline"
   },
   {
+    "name": "Putry Jazyta",
+    "nicknames": ["Jazzy"],
+    "img_alt": "https://jkt48.com/api/v1/storages/media/jkt48-member/putry_jazyta.jpg",
+    "url": "jazzy",
+    "video_perkenalan": "",
+    "group": "jkt48",
+    "height": "159cm",
+    "jikosokai": "",
+    "description": "📌 Name: Putry Jazyta\r\n🎂 Birthday: 12 Maret 2011\r\n🩸 Blood type: A\r\n🏹 Zodiac signs: Pisces",
+    "socials": [],
+    "is_graduate": false,
+    "generation": "Trainee"
+  },
+  {
     "_id": "65ce68ea1dd7aa2c8c0ca6ce",
     "name": "Raisha Syifa",
     "nicknames": ["Raisha"],
@@ -1915,6 +2027,20 @@
     "video_perkenalan": "RGjhuqrPIvc",
     "generation": "Gen 10",
     "idn_username": "jkt48_raisha"
+  },
+  {
+    "name": "Ralyne Van Irwan",
+    "nicknames": ["Ralyne"],
+    "img_alt": "https://jkt48.com/api/v1/storages/media/jkt48-member/ralyne_van_irwan.jpg",
+    "url": "ralyne",
+    "video_perkenalan": "",
+    "group": "jkt48",
+    "height": "152cm",
+    "jikosokai": "",
+    "description": "📌 Name: Ralyne Van Irwan\r\n🎂 Birthday: 15 Oktober 2011\r\n🩸 Blood type: AB\r\n🏹 Zodiac signs: Libra",
+    "socials": [],
+    "is_graduate": false,
+    "generation": "Trainee"
   },
   {
     "_id": "65ce68ed1dd7aa2c8c0ca786",
@@ -2079,6 +2205,20 @@
     "generation": "Gen 3",
     "video_perkenalan": "AYFure5ZZA4",
     "idn_username": "jkt48_gracia"
+  },
+  {
+    "name": "Sona Kalyana",
+    "nicknames": ["Sona"],
+    "img_alt": "https://jkt48.com/api/v1/storages/media/jkt48-member/sona_kalyana.jpg",
+    "url": "sona",
+    "video_perkenalan": "",
+    "group": "jkt48",
+    "height": "154cm",
+    "jikosokai": "",
+    "description": "📌 Name: Sona Kalyana\r\n🎂 Birthday: 1 Desember 2011\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Sagittarius",
+    "socials": [],
+    "is_graduate": false,
+    "generation": "Trainee"
   },
   {
     "_id": "65ce68ed1dd7aa2c8c0ca78c",
