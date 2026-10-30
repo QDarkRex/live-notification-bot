@@ -31,7 +31,8 @@ async function initializeBot() {
     const backupDatabase = async (userId: Snowflake) => {
       try {
         const user = await client.users.fetch(userId);
-        const dbPath = path.join(__dirname, "../whitelist.db");
+        // Same file the bot opens (db.ts): DB_PATH, relative to the working directory.
+        const dbPath = path.resolve(env.DB_PATH);
         const attachment = new AttachmentBuilder(dbPath);
 
         await user.send({
