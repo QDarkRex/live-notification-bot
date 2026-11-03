@@ -5,6 +5,8 @@ import { env } from "./envConfig";
 
 // Initialize database with proper typing
 const db: Database = new sqlite3.Database(env.DB_PATH);
+// Wait for a lock (e.g. someone inspecting the file) instead of failing writes with SQLITE_BUSY.
+db.configure("busyTimeout", 5000);
 
 // Define table schemas with type safety
 const tableSchemas = [
