@@ -74,16 +74,18 @@ async function ensureSession(slug: string, streamerUuid: string, now: number): P
   const existing = await get("SELECT 1 FROM gift_sessions WHERE slug = ?", [slug]);
   if (existing) return;
   const periodId = (await latestPeriod(streamerUuid)) ?? (await createPeriod(streamerUuid, now));
-  await run(
-    "INSERT OR IGNORE INTO gift_sessions (slug, streamer_uuid, start_period_id, started_at) VALUES (?, ?, ?, ?)",
-    [slug, streamerUuid, periodId, now],
-  );
+  // Baseline first, session row last: if a write fails halfway, the session
+  // doesn't exist yet and the retry rebuilds the baseline from scratch.
   for (const g of await periodTotals(periodId)) {
     await run(
       "INSERT OR IGNORE INTO gift_session_baseline (slug, gifter_uuid, total_gold, total_point) VALUES (?, ?, ?, ?)",
       [slug, g.uuid, g.gold, g.point],
     );
   }
+  await run(
+    "INSERT OR IGNORE INTO gift_sessions (slug, streamer_uuid, start_period_id, started_at) VALUES (?, ?, ?, ?)",
+    [slug, streamerUuid, periodId, now],
+  );
 }
 
 async function applySnapshot(streamerUuid: string, gifters: GifterTotal[], slug?: string): Promise<void> {
@@ -118,6 +120,22 @@ async function applySnapshot(streamerUuid: string, gifters: GifterTotal[], slug?
   await run("UPDATE gift_periods SET updated_at = ? WHERE id = ?", [now, periodId]);
 }
 
+// The production build bundles each event/command file separately, each with
+// its own copy of db.ts, so several connections write the same file. SQLite
+// can answer one of two concurrent writers with SQLITE_BUSY at once (deadlock
+// avoidance, the busy timeout doesn't help), so retry: a snapshot is cumulative
+// and every write here is idempotent, so applying it again is safe.
+async function applyWithRetry(streamerUuid: string, gifters: GifterTotal[], slug?: string): Promise<void> {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return await applySnapshot(streamerUuid, gifters, slug);
+    } catch (err) {
+      if ((err as { code?: string }).code !== "SQLITE_BUSY" || attempt >= 5) throw err;
+      await new Promise((resolve) => setTimeout(resolve, 250 * attempt + Math.random() * 250));
+    }
+  }
+}
+
 // One write at a time per streamer: the 15s poll, the end-of-live poll and the
 // nightly sweep can otherwise interleave and both decide to open a period.
 const queues = new Map<string, Promise<void>>();
@@ -126,7 +144,7 @@ const queues = new Map<string, Promise<void>>();
 export function recordSnapshot(streamerUuid: string, gifters: GifterTotal[], slug?: string): Promise<void> {
   const prev = queues.get(streamerUuid) ?? Promise.resolve();
   const next = prev
-    .then(() => applySnapshot(streamerUuid, gifters, slug))
+    .then(() => applyWithRetry(streamerUuid, gifters, slug))
     .catch((err) => console.error(`[gifts] failed to record snapshot for ${streamerUuid}:`, err));
   queues.set(streamerUuid, next);
   return next;
