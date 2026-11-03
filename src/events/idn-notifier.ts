@@ -1,9 +1,11 @@
-import { scrapeGiftData } from "@/api/gift/giftService";
+import { fetchGiftRanking } from "@/api/gift/giftService";
 import { Member } from "@/commands/schedule";
 import { CONFIG } from "@/common/utils/constants";
 import db from "@/common/utils/db";
+import { knownStreamers, recordSnapshot, rememberStreamer, sessionLeaderboard } from "@/common/utils/giftTracker";
 import axios from "axios";
 import { type Client, EmbedBuilder, TextChannel } from "discord.js";
+import schedule from "node-schedule";
 
 export interface Livestream {
   data: Data;
@@ -251,23 +253,86 @@ function createEndLiveEmbed(user: any) {
   return embed;
 }
 
-async function updateTopGifts(uuid: string) {
+/**
+ * Poll IDN's ranking for a streamer. It feeds the gift tracker (which survives
+ * IDN's daily reset) and, while they're live, the legacy top_gifts snapshot
+ * used as a fallback for sessions the tracker never saw.
+ */
+async function updateTopGifts(uuid: string, slug?: string) {
   try {
-    const topGifts = await scrapeGiftData(uuid);
+    const ranking = await fetchGiftRanking(uuid);
+    await recordSnapshot(
+      uuid,
+      ranking.map((item) => ({ uuid: item.uuid, name: item.name, gold: item.total_gold, point: item.total_point })),
+      slug,
+    );
+    if (!slug) return;
     db.serialize(() => {
       db.run("DELETE FROM top_gifts WHERE uuid = ?", [uuid]);
       const stmt = db.prepare(
         "INSERT INTO top_gifts (uuid, rank, name, total_gold, total_point) VALUES (?, ?, ?, ?, ?)",
       );
-      topGifts.forEach((gift) => {
-        const totalGold = Number.parseInt(gift.gold.replace(" Gold", ""), 10);
-        const totalPoint = Number.parseInt(gift.point.replace(" Point", ""), 10);
-        stmt.run(uuid, gift.rank, gift.name, totalGold, totalPoint);
+      ranking.slice(0, 10).forEach((gift) => {
+        stmt.run(uuid, gift.rank, gift.name, gift.total_gold, gift.total_point);
       });
       stmt.finalize();
     });
   } catch (error) {
     console.error("Failed to update top gifts", error);
+  }
+}
+
+interface EndLiveGifter {
+  rank: number;
+  name: string;
+  total_gold: number;
+  total_point: number;
+}
+
+/** Top gifters of the whole session, including gifts from before midnight. */
+async function endLiveGifters(user: { user_id: string; slug: string }): Promise<EndLiveGifter[]> {
+  // One last poll so gifts from the final seconds of the live count.
+  await updateTopGifts(user.user_id, user.slug);
+  try {
+    const tracked = await sessionLeaderboard(user.slug, 10);
+    if (tracked) {
+      return tracked.map((g, i) => ({ rank: i + 1, name: g.name, total_gold: g.gold, total_point: g.point }));
+    }
+  } catch (error) {
+    console.error("❗ Failed to read tracked session gifts", error);
+  }
+  return new Promise((resolve) => {
+    db.all(
+      "SELECT rank, name, total_gold, total_point FROM top_gifts WHERE uuid = ? ORDER BY rank LIMIT 10",
+      [user.user_id],
+      (err, rows: any[]) => {
+        if (err) console.error("❗ Failed to retrieve top gifts", err);
+        resolve(err ? [] : rows);
+      },
+    );
+  });
+}
+
+function notifiedUserIds(): Promise<Set<string>> {
+  return new Promise((resolve) => {
+    db.all("SELECT user_id FROM idn_live", (err, rows: any[]) =>
+      resolve(new Set(err ? [] : rows.map((r) => r.user_id))),
+    );
+  });
+}
+
+/**
+ * Record every known member's ranking once. Live members are skipped: they're
+ * polled with their session slug, and recording them here first would push
+ * their session's early gifts into its baseline.
+ */
+async function sweepStreamers() {
+  const live = await notifiedUserIds();
+  for (const stream of liveStreams) live.add(stream.creator.uuid);
+  for (const streamer of await knownStreamers()) {
+    if (live.has(streamer.uuid)) continue;
+    await updateTopGifts(streamer.uuid);
+    await new Promise((resolve) => setTimeout(resolve, 300));
   }
 }
 
@@ -279,6 +344,9 @@ async function sendNotifications(client: Client) {
   }
 
   liveStreams = filterLiveStreams(streams);
+  for (const stream of liveStreams) {
+    rememberStreamer(stream.creator.uuid, stream.creator.username, stream.creator.name);
+  }
 
   db.serialize(() => {
     db.run(
@@ -327,7 +395,7 @@ async function sendNotifications(client: Client) {
               console.log(`🔴 Member sedang live: ${stream.creator.name} (IDN Live)`);
 
               const embed = createEmbed(stream);
-              updateTopGifts(stream.creator.uuid);
+              updateTopGifts(stream.creator.uuid, stream.slug);
               for (const channelId of channelIds) {
                 try {
                   const channel = await client.channels.fetch(channelId);
@@ -428,71 +496,45 @@ async function sendNotifications(client: Client) {
 
             for (const user of inactiveUsers) {
               const embed = createEndLiveEmbed(user);
-              db.all(
-                "SELECT rank, name, total_gold, total_point FROM top_gifts WHERE uuid = ? ORDER BY rank LIMIT 10",
-                [user.user_id],
-                async (err, topGifts: any[]) => {
-                  if (err) {
-                    console.error("❗ Failed to retrieve top gifts", err);
-                  } else {
-                    const teks = "```";
-                    const leftColumn = topGifts
-                      .slice(0, 5)
-                      .map(
-                        (gift) => `${gift.rank}. ${gift.name}\n(${gift.total_gold} Gold) | (${gift.total_point} Point)`,
-                      )
-                      .join("\n");
+              const topGifts = await endLiveGifters(user);
+              const teks = "```";
+              const line = (gift: EndLiveGifter) =>
+                `${gift.rank}. ${gift.name}\n(${gift.total_gold} Gold) | (${gift.total_point} Point)`;
+              const column = (gifts: EndLiveGifter[]) =>
+                gifts.length > 0 ? `${teks}${gifts.map(line).join("\n")}${teks}` : "Tidak ada gifter";
 
-                    const rightColumn = topGifts
-                      .slice(5, 10)
-                      .map(
-                        (gift) => `${gift.rank}. ${gift.name}\n(${gift.total_gold} Gold) | (${gift.total_point} Point)`,
-                      )
-                      .join("\n");
-
-                    embed.addFields(
-                      {
-                        name: "Top Gifters (1-5)",
-                        value: `${teks}${leftColumn}${teks}` || "No gifters",
-                        inline: true,
-                      },
-                      {
-                        name: "Top Gifters (6-10)",
-                        value: `${teks}${rightColumn}${teks}` || "No gifters",
-                        inline: true,
-                      },
-                    );
-
-                    for (const channelId of channelIds) {
-                      try {
-                        const channel = await client.channels.fetch(channelId);
-                        if (channel && channel instanceof TextChannel) {
-                          await channel.send({ embeds: [embed] });
-                          db.run("DELETE FROM top_gifts WHERE uuid = ?", [user.user_id], (err) => {
-                            if (err) {
-                              console.error("❗ Failed to delete gift data", err);
-                            }
-                          });
-                        }
-                      } catch (error) {
-                        const err = error as any;
-                        if (err.code === 50013 || err.code === 50001 || err.code === 10003) {
-                          console.error(`❗ Missing permissions for channel ${channelId}. Removing from whitelist.`);
-                          db.run("DELETE FROM whitelist WHERE channel_id = ?", [channelId], (err) => {
-                            if (err) {
-                              console.error("❗ Failed to delete channel from whitelist", err);
-                            } else {
-                              console.log(`❗ Channel ${channelId} removed from whitelist.`);
-                            }
-                          });
-                        } else {
-                          console.error(`❗ Failed to send end live notification to channel ${channelId}: ${err}`);
-                        }
-                      }
-                    }
-                  }
-                },
+              embed.addFields(
+                { name: "Top Gifters (1-5)", value: column(topGifts.slice(0, 5)), inline: true },
+                { name: "Top Gifters (6-10)", value: column(topGifts.slice(5, 10)), inline: true },
               );
+
+              for (const channelId of channelIds) {
+                try {
+                  const channel = await client.channels.fetch(channelId);
+                  if (channel && channel instanceof TextChannel) {
+                    await channel.send({ embeds: [embed] });
+                  }
+                } catch (error) {
+                  const err = error as any;
+                  if (err.code === 50013 || err.code === 50001 || err.code === 10003) {
+                    console.error(`❗ Missing permissions for channel ${channelId}. Removing from whitelist.`);
+                    db.run("DELETE FROM whitelist WHERE channel_id = ?", [channelId], (err) => {
+                      if (err) {
+                        console.error("❗ Failed to delete channel from whitelist", err);
+                      } else {
+                        console.log(`❗ Channel ${channelId} removed from whitelist.`);
+                      }
+                    });
+                  } else {
+                    console.error(`❗ Failed to send end live notification to channel ${channelId}: ${err}`);
+                  }
+                }
+              }
+              db.run("DELETE FROM top_gifts WHERE uuid = ?", [user.user_id], (err) => {
+                if (err) {
+                  console.error("❗ Failed to delete gift data", err);
+                }
+              });
 
               // Kirim embed end live ke setiap webhook
               for (const webhookUrl of webhookUrls) {
@@ -523,10 +565,18 @@ async function sendNotifications(client: Client) {
   });
 }
 
-setInterval(() => {
-  liveStreams.forEach((stream) => updateTopGifts(stream.creator.uuid));
-}, 15000);
+const pollLiveGifts = () => {
+  liveStreams.forEach((stream) => updateTopGifts(stream.creator.uuid, stream.slug));
+};
+
+setInterval(pollLiveGifts, 15000);
 
 export default function (client: Client) {
   setInterval(() => sendNotifications(client), 30000);
+  // IDN resets its daily ranking at midnight; grab the last gifts just before.
+  schedule.scheduleJob({ hour: 23, minute: 59, second: 50, tz: "Asia/Jakarta" }, pollLiveGifts);
+  // Safety net for lives we never saw (bot down, a missed live): record
+  // everyone's final daily totals, and once at startup to catch up on today.
+  schedule.scheduleJob({ hour: 23, minute: 55, second: 0, tz: "Asia/Jakarta" }, () => sweepStreamers());
+  setTimeout(() => sweepStreamers(), 45000);
 }

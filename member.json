@@ -89,9 +89,15 @@
     "height": "160cm",
     "jikosokai": "",
     "description": "📌 Name: Afera Thalia\r\n🎂 Birthday: 20 Oktober 2012\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Libra",
-    "socials": [],
+    "socials": [
+      {
+        "title": "IDN",
+        "url": "https://click.idn.media/VKUf?af_dp=idnapp://profile/224d7e34-54ce-4aaa-a8e8-f9e197d7f774&af_web_dp=https://www.idn.app/jkt48_fera&c=web-android&deep_link_value=profile/224d7e34-54ce-4aaa-a8e8-f9e197d7f774&pid=idnapp"
+      }
+    ],
     "is_graduate": false,
-    "generation": "Trainee"
+    "generation": "Trainee",
+    "idn_username": "jkt48_fera"
   },
   {
     "name": "Astrella Virgiananda",
@@ -104,7 +110,14 @@
     "jikosokai": "Suka berekspresi melalui kreasi, Tara!!! Aku Virgi",
     "description": "📌 Name: Astrella Virgiananda\r\n🎂 Birthday: 6 Agustus 2010\r\n🩸 Blood type: AB\r\n🏹 Zodiac signs: Leo",
     "is_graduate": false,
-    "generation": "Gen 13"
+    "generation": "Gen 13",
+    "socials": [
+      {
+        "title": "IDN",
+        "url": "https://click.idn.media/VKUf?af_dp=idnapp://profile/147e83c8-f3ac-4680-9141-2f518b4b7810&af_web_dp=https://www.idn.app/jkt48_virgi&c=web-android&deep_link_value=profile/147e83c8-f3ac-4680-9141-2f518b4b7810&pid=idnapp"
+      }
+    ],
+    "idn_username": "jkt48_virgi"
   },
   {
     "name": "Aulia Riza",
@@ -117,7 +130,14 @@
     "jikosokai": "Serigala tangguh di bawah sinar purnama panggil aku Awuiaaaa",
     "description": "📌 Name: Aulia Riza\r\n🎂 Birthday: 14 Juli 2007\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Cancer",
     "is_graduate": false,
-    "generation": "Gen 13"
+    "generation": "Gen 13",
+    "socials": [
+      {
+        "title": "IDN",
+        "url": "https://click.idn.media/VKUf?af_dp=idnapp://profile/f9500eb4-9d6d-491d-a857-40ca6f862d61&af_web_dp=https://www.idn.app/jkt48_auwia&c=web-android&deep_link_value=profile/f9500eb4-9d6d-491d-a857-40ca6f862d61&pid=idnapp"
+      }
+    ],
+    "idn_username": "jkt48_auwia"
   },
   {
     "name": "Bong Aprilli",
@@ -130,7 +150,14 @@
     "jikosokai": "Bagaikan harmoni indah yang berirama di benakmu, Hai aku Rilly",
     "description": "📌 Name: Bong Aprilli\r\n🎂 Birthday: 1 April 2010\r\n🩸 Blood type: A\r\n🏹 Zodiac signs: Aries",
     "is_graduate": false,
-    "generation": "Gen 13"
+    "generation": "Gen 13",
+    "socials": [
+      {
+        "title": "IDN",
+        "url": "https://click.idn.media/VKUf?af_dp=idnapp://profile/e9170998-f026-4186-bbc5-a17a3b5b2af1&af_web_dp=https://www.idn.app/jkt48_rilly&c=web-android&deep_link_value=profile/e9170998-f026-4186-bbc5-a17a3b5b2af1&pid=idnapp"
+      }
+    ],
+    "idn_username": "jkt48_rilly"
   },
   {
     "name": "Carissa Dini",
@@ -142,9 +169,15 @@
     "height": "154cm",
     "jikosokai": "",
     "description": "📌 Name: Carissa Dini\r\n🎂 Birthday: 2 Februari 2012\r\n🩸 Blood type: A\r\n🏹 Zodiac signs: Aquarius",
-    "socials": [],
+    "socials": [
+      {
+        "title": "IDN",
+        "url": "https://click.idn.media/VKUf?af_dp=idnapp://profile/860ed330-d0bf-4af9-bc33-575e876abcc3&af_web_dp=https://www.idn.app/jkt48_carissa&c=web-android&deep_link_value=profile/860ed330-d0bf-4af9-bc33-575e876abcc3&pid=idnapp"
+      }
+    ],
     "is_graduate": false,
-    "generation": "Trainee"
+    "generation": "Trainee",
+    "idn_username": "jkt48_carissa"
   },
   {
     "name": "Christabella Bonita",
@@ -156,9 +189,15 @@
     "height": "161cm",
     "jikosokai": "",
     "description": "📌 Name: Christabella Bonita\r\n🎂 Birthday: 2 Maret 2011\r\n🩸 Blood type: A\r\n🏹 Zodiac signs: Pisces",
-    "socials": [],
+    "socials": [
+      {
+        "title": "IDN",
+        "url": "https://click.idn.media/VKUf?af_dp=idnapp://profile/79560bc6-813e-44d7-95b1-c9cf8e29f620&af_web_dp=https://www.idn.app/jkt48_bella&c=web-android&deep_link_value=profile/79560bc6-813e-44d7-95b1-c9cf8e29f620&pid=idnapp"
+      }
+    ],
     "is_graduate": false,
-    "generation": "Trainee"
+    "generation": "Trainee",
+    "idn_username": "jkt48_bella"
   },
   {
     "name": "Fahira Putri",
@@ -170,9 +209,15 @@
     "height": "152cm",
     "jikosokai": "",
     "description": "📌 Name: Fahira Putri\r\n🎂 Birthday: 13 Agustus 2012\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Leo",
-    "socials": [],
+    "socials": [
+      {
+        "title": "IDN",
+        "url": "https://click.idn.media/VKUf?af_dp=idnapp://profile/1d21f357-686e-4a7a-aa32-6a32090d924e&af_web_dp=https://www.idn.app/jkt48_fahira&c=web-android&deep_link_value=profile/1d21f357-686e-4a7a-aa32-6a32090d924e&pid=idnapp"
+      }
+    ],
     "is_graduate": false,
-    "generation": "Trainee"
+    "generation": "Trainee",
+    "idn_username": "jkt48_fahira"
   },
   {
     "name": "Fatimah Azzahra",
@@ -184,9 +229,15 @@
     "height": "170cm",
     "jikosokai": "",
     "description": "📌 Name: Fatimah Azzahra\r\n🎂 Birthday: 30 Agustus 2010\r\n🩸 Blood type: AB\r\n🏹 Zodiac signs: Virgo",
-    "socials": [],
+    "socials": [
+      {
+        "title": "IDN",
+        "url": "https://click.idn.media/VKUf?af_dp=idnapp://profile/22ea8526-30a9-4f95-a750-b84673647054&af_web_dp=https://www.idn.app/jkt48_rara&c=web-android&deep_link_value=profile/22ea8526-30a9-4f95-a750-b84673647054&pid=idnapp"
+      }
+    ],
     "is_graduate": false,
-    "generation": "Trainee"
+    "generation": "Trainee",
+    "idn_username": "jkt48_rara"
   },
   {
     "name": "Hagia Sopia",
@@ -199,7 +250,14 @@
     "jikosokai": "Dengan semangat dan kerja kerasku, aku akan membuat kalian baha - giaa, Halo panggil aku Giaa",
     "description": "📌 Name: Hagia Sopia\r\n🎂 Birthday: 1 Juli 2008\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Cancer",
     "is_graduate": false,
-    "generation": "Gen 13"
+    "generation": "Gen 13",
+    "socials": [
+      {
+        "title": "IDN",
+        "url": "https://click.idn.media/VKUf?af_dp=idnapp://profile/3c97d6a6-6fc2-4e2b-b7f6-e94ebe9c3e93&af_web_dp=https://www.idn.app/jkt48_giaa&c=web-android&deep_link_value=profile/3c97d6a6-6fc2-4e2b-b7f6-e94ebe9c3e93&pid=idnapp"
+      }
+    ],
+    "idn_username": "jkt48_giaa"
   },
   {
     "name": "Heidi Suyangga",
@@ -211,9 +269,15 @@
     "height": "164cm",
     "jikosokai": "",
     "description": "📌 Name: Heidi Suyangga\r\n🎂 Birthday: 27 Agustus 2008\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Virgo",
-    "socials": [],
+    "socials": [
+      {
+        "title": "IDN",
+        "url": "https://click.idn.media/VKUf?af_dp=idnapp://profile/9bb79bed-688f-42bc-b971-c12668b7bb90&af_web_dp=https://www.idn.app/jkt48_heidi&c=web-android&deep_link_value=profile/9bb79bed-688f-42bc-b971-c12668b7bb90&pid=idnapp"
+      }
+    ],
     "is_graduate": false,
-    "generation": "Trainee"
+    "generation": "Trainee",
+    "idn_username": "jkt48_heidi"
   },
   {
     "name": "Humaira Ramadhani",
@@ -226,7 +290,14 @@
     "jikosokai": "Penceria yang membuatmu tertawa dengan tingkahku, Halo semuanya aku Maira",
     "description": "📌 Name: Humaira Ramadhani\r\n🎂 Birthday: 13 Agustus 2011\r\n🩸 Blood type: A\r\n🏹 Zodiac signs: Leo",
     "is_graduate": false,
-    "generation": "Gen 13"
+    "generation": "Gen 13",
+    "socials": [
+      {
+        "title": "IDN",
+        "url": "https://click.idn.media/VKUf?af_dp=idnapp://profile/7599c984-c466-4962-8c5b-73c1d33d59d9&af_web_dp=https://www.idn.app/jkt48_maira&c=web-android&deep_link_value=profile/7599c984-c466-4962-8c5b-73c1d33d59d9&pid=idnapp"
+      }
+    ],
+    "idn_username": "jkt48_maira"
   },
   {
     "name": "Jacqueline Immanuela",
@@ -239,7 +310,14 @@
     "height": "160cm",
     "description": "📌 Name: Jacqueline Immanuela\r\n🎂 Birthday: 9 Juli 2009\r\n🩸 Blood type: B\r\n🏹 Zodiac signs: Cancer",
     "is_graduate": false,
-    "generation": "Gen 13"
+    "generation": "Gen 13",
+    "socials": [
+      {
+        "title": "IDN",
+        "url": "https://click.idn.media/VKUf?af_dp=idnapp://profile/85f369d7-6525-41c0-94b8-9a56686713eb&af_web_dp=https://www.idn.app/jkt48_ekin&c=web-android&deep_link_value=profile/85f369d7-6525-41c0-94b8-9a56686713eb&pid=idnapp"
+      }
+    ],
+    "idn_username": "jkt48_ekin"
   },
   {
     "name": "Jemima Evodie",
@@ -252,7 +330,14 @@
     "video_perkenalan": "9rH9Z2mrXaA",
     "description": "📌 Name: Jemima Evodie\r\n🎂 Birthday: 9 November 2009\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Scorpio",
     "is_graduate": false,
-    "generation": "Gen 13"
+    "generation": "Gen 13",
+    "socials": [
+      {
+        "title": "IDN",
+        "url": "https://click.idn.media/VKUf?af_dp=idnapp://profile/fe70498c-cb4c-4f98-9ad8-e0bd3fe2c453&af_web_dp=https://www.idn.app/jkt48_jemima&c=web-android&deep_link_value=profile/fe70498c-cb4c-4f98-9ad8-e0bd3fe2c453&pid=idnapp"
+      }
+    ],
+    "idn_username": "jkt48_jemima"
   },
   {
     "name": "Maxine Faye",
@@ -264,9 +349,15 @@
     "height": "164cm",
     "jikosokai": "",
     "description": "📌 Name: Maxine Faye\r\n🎂 Birthday: 2 Desember 2011\r\n🩸 Blood type: B\r\n🏹 Zodiac signs: Sagittarius",
-    "socials": [],
+    "socials": [
+      {
+        "title": "IDN",
+        "url": "https://click.idn.media/VKUf?af_dp=idnapp://profile/fb24385e-4954-4ae9-b24e-de041cfca0c4&af_web_dp=https://www.idn.app/jkt48_maxine&c=web-android&deep_link_value=profile/fb24385e-4954-4ae9-b24e-de041cfca0c4&pid=idnapp"
+      }
+    ],
     "is_graduate": false,
-    "generation": "Trainee"
+    "generation": "Trainee",
+    "idn_username": "jkt48_maxine"
   },
   {
     "name": "Mikaela Kusjanto",
@@ -279,7 +370,14 @@
     "video_perkenalan": "sLKa2_Wgnys",
     "description": "📌 Name: Mikaela Kusjanto\r\n🎂 Birthday: 15 Desember 2007\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Sagitarius",
     "is_graduate": false,
-    "generation": "Gen 13"
+    "generation": "Gen 13",
+    "socials": [
+      {
+        "title": "IDN",
+        "url": "https://click.idn.media/VKUf?af_dp=idnapp://profile/a557ba58-12d8-4260-bd50-9e5252ac71ef&af_web_dp=https://www.idn.app/jkt48_mikaela&c=web-android&deep_link_value=profile/a557ba58-12d8-4260-bd50-9e5252ac71ef&pid=idnapp"
+      }
+    ],
+    "idn_username": "jkt48_mikaela"
   },
   {
     "name": "Nur Intan",
@@ -292,7 +390,14 @@
     "video_perkenalan": "SojGpGHMYEA",
     "description": "📌 Name: Nur Intan\r\n🎂 Birthday: 24 Februari 2006\r\n🩸 Blood type: B\r\n🏹 Zodiac signs: Pisces",
     "is_graduate": false,
-    "generation": "Gen 13"
+    "generation": "Gen 13",
+    "socials": [
+      {
+        "title": "IDN",
+        "url": "https://click.idn.media/VKUf?af_dp=idnapp://profile/cbc0bbe1-d6ea-4646-bfcf-24b3a642fa21&af_web_dp=https://www.idn.app/jkt48_intan&c=web-android&deep_link_value=profile/cbc0bbe1-d6ea-4646-bfcf-24b3a642fa21&pid=idnapp"
+      }
+    ],
+    "idn_username": "jkt48_intan"
   },
   {
     "_id": "65ce68ec1dd7aa2c8c0ca738",
@@ -1984,9 +2089,15 @@
     "height": "159cm",
     "jikosokai": "",
     "description": "📌 Name: Putry Jazyta\r\n🎂 Birthday: 12 Maret 2011\r\n🩸 Blood type: A\r\n🏹 Zodiac signs: Pisces",
-    "socials": [],
+    "socials": [
+      {
+        "title": "IDN",
+        "url": "https://click.idn.media/VKUf?af_dp=idnapp://profile/52d343df-2b43-4848-9b23-70a081659109&af_web_dp=https://www.idn.app/jkt48_jazzy&c=web-android&deep_link_value=profile/52d343df-2b43-4848-9b23-70a081659109&pid=idnapp"
+      }
+    ],
     "is_graduate": false,
-    "generation": "Trainee"
+    "generation": "Trainee",
+    "idn_username": "jkt48_jazzy"
   },
   {
     "_id": "65ce68ea1dd7aa2c8c0ca6ce",
@@ -2038,9 +2149,15 @@
     "height": "152cm",
     "jikosokai": "",
     "description": "📌 Name: Ralyne Van Irwan\r\n🎂 Birthday: 15 Oktober 2011\r\n🩸 Blood type: AB\r\n🏹 Zodiac signs: Libra",
-    "socials": [],
+    "socials": [
+      {
+        "title": "IDN",
+        "url": "https://click.idn.media/VKUf?af_dp=idnapp://profile/ea45d282-0b03-4b7f-a4e9-cf649f27fcd0&af_web_dp=https://www.idn.app/jkt48_ralyne&c=web-android&deep_link_value=profile/ea45d282-0b03-4b7f-a4e9-cf649f27fcd0&pid=idnapp"
+      }
+    ],
     "is_graduate": false,
-    "generation": "Trainee"
+    "generation": "Trainee",
+    "idn_username": "jkt48_ralyne"
   },
   {
     "_id": "65ce68ed1dd7aa2c8c0ca786",
@@ -2216,9 +2333,15 @@
     "height": "154cm",
     "jikosokai": "",
     "description": "📌 Name: Sona Kalyana\r\n🎂 Birthday: 1 Desember 2011\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Sagittarius",
-    "socials": [],
+    "socials": [
+      {
+        "title": "IDN",
+        "url": "https://click.idn.media/VKUf?af_dp=idnapp://profile/61d965a9-58cc-4d79-8104-0a326b91f731&af_web_dp=https://www.idn.app/jkt48_sona&c=web-android&deep_link_value=profile/61d965a9-58cc-4d79-8104-0a326b91f731&pid=idnapp"
+      }
+    ],
     "is_graduate": false,
-    "generation": "Trainee"
+    "generation": "Trainee",
+    "idn_username": "jkt48_sona"
   },
   {
     "_id": "65ce68ed1dd7aa2c8c0ca78c",

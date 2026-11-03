@@ -74,6 +74,50 @@ const tableSchemas = [
         PRIMARY KEY (uuid, rank)
     )`,
 
+  // Gift tracker (giftTracker.ts): one row per IDN daily-ranking period.
+  `CREATE TABLE IF NOT EXISTS gift_periods (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        streamer_uuid TEXT NOT NULL,
+        day TEXT NOT NULL,
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL
+    )`,
+
+  "CREATE INDEX IF NOT EXISTS idx_gift_periods_streamer ON gift_periods (streamer_uuid, id)",
+
+  "CREATE INDEX IF NOT EXISTS idx_gift_periods_day ON gift_periods (day)",
+
+  `CREATE TABLE IF NOT EXISTS gift_period_totals (
+        period_id INTEGER NOT NULL,
+        gifter_uuid TEXT NOT NULL,
+        gifter_name TEXT NOT NULL,
+        total_gold INTEGER NOT NULL,
+        total_point INTEGER NOT NULL,
+        PRIMARY KEY (period_id, gifter_uuid)
+    )`,
+
+  `CREATE TABLE IF NOT EXISTS gift_sessions (
+        slug TEXT PRIMARY KEY,
+        streamer_uuid TEXT NOT NULL,
+        start_period_id INTEGER NOT NULL,
+        started_at INTEGER NOT NULL
+    )`,
+
+  `CREATE TABLE IF NOT EXISTS gift_session_baseline (
+        slug TEXT NOT NULL,
+        gifter_uuid TEXT NOT NULL,
+        total_gold INTEGER NOT NULL,
+        total_point INTEGER NOT NULL,
+        PRIMARY KEY (slug, gifter_uuid)
+    )`,
+
+  `CREATE TABLE IF NOT EXISTS idn_streamers (
+        uuid TEXT PRIMARY KEY,
+        username TEXT,
+        name TEXT,
+        updated_at INTEGER
+    )`,
+
   `CREATE TABLE IF NOT EXISTS webhook (
         url TEXT,
         user_id TEXT,

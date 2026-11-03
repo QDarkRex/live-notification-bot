@@ -43,6 +43,11 @@ export async function run({ interaction, client }: SlashCommandProps) {
       { name: "/birthday", value: "Lihat 10 ulang tahun member JKT48 terdekat." },
       { name: "/news", value: "Lihat berita terbaru dari JKT48." },
       {
+        name: "/supporter `member`",
+        value:
+          "Gold IDN Live per member selama event Best Supporter (3 Nov–31 Des). Tanpa `member`: peringkat semua member. Dengan `member`: top 10 supporter di room member itu.",
+      },
+      {
         name: "/tiket `kode`",
         value:
           "Cek sisa tiket JKT48 (theater show / 2-shot / video call / photobook / photocard).\nContoh: `/tiket kode:SHCB04` (show) atau `/tiket kode:EXCB75` (exclusive).",
