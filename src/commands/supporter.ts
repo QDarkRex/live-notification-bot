@@ -4,6 +4,7 @@ import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { BEST_SUPPORTER_EVENT } from "@/common/utils/constants";
 import {
   type Streamer,
+  activeMemberUuids,
   firstTrackedDay,
   knownStreamers,
   streamerSupporters,
@@ -49,12 +50,13 @@ export async function run({ interaction }: SlashCommandProps) {
   await interaction.deferReply();
   try {
     const { start, end, label } = BEST_SUPPORTER_EVENT;
-    const streamers = await knownStreamers();
+    const memberUuids = activeMemberUuids();
+    const streamers = (await knownStreamers()).filter((streamer) => memberUuids.has(streamer.uuid));
     const query = interaction.options.getString("member");
 
     if (!query) {
       const names = new Map(streamers.map((s) => [s.uuid, s.name]));
-      const totals = (await streamerTotals(start, end)).filter((t) => t.gold > 0);
+      const totals = (await streamerTotals(start, end)).filter((t) => memberUuids.has(t.streamer_uuid) && t.gold > 0);
       const lines = totals
         .slice(0, 25)
         .map(

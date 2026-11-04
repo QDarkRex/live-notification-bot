@@ -219,20 +219,22 @@ export interface Streamer {
   fullName?: string;
 }
 
-export function rememberStreamer(uuid: string, username: string, name: string): void {
-  db.run(
-    "INSERT INTO idn_streamers (uuid, username, name, updated_at) VALUES (?, ?, ?, ?) ON CONFLICT (uuid) DO UPDATE SET username = excluded.username, name = excluded.name, updated_at = excluded.updated_at",
-    [uuid, username, name, Date.now()],
-    (err) => err && console.error("[gifts] failed to remember streamer", err),
+export function rememberStreamer(uuid: string, username: string, name: string): Promise<void> {
+  return new Promise((resolve, reject) =>
+    db.run(
+      "INSERT INTO idn_streamers (uuid, username, name, updated_at) VALUES (?, ?, ?, ?) ON CONFLICT (uuid) DO UPDATE SET username = excluded.username, name = excluded.name, updated_at = excluded.updated_at",
+      [uuid, username, name, Date.now()],
+      (err) => (err ? reject(err) : resolve()),
+    ),
   );
 }
 
-function membersFromJson(): Streamer[] {
+function membersFromJson(includeGraduates = false): Streamer[] {
   try {
     const members: Member[] = JSON.parse(readFileSync("member.json", "utf8"));
     const out: Streamer[] = [];
     for (const m of members) {
-      if (m.is_graduate) continue;
+      if (!includeGraduates && m.is_graduate) continue;
       const idn = (m.socials ?? []).find((s) => s.title === "IDN")?.url ?? "";
       const uuid = /profile\/([0-9a-f-]{36})/.exec(idn)?.[1];
       if (uuid) out.push({ uuid, username: m.idn_username ?? "", name: m.nicknames[0] ?? m.name, fullName: m.name });
@@ -242,6 +244,38 @@ function membersFromJson(): Streamer[] {
     console.error("[gifts] failed to read member.json", err);
     return [];
   }
+}
+
+/** UUIDs from every member.json entry, including graduates. */
+export function allMemberUuids(): Set<string> {
+  return new Set(membersFromJson(true).map((member) => member.uuid));
+}
+
+/** UUIDs for active member.json entries. */
+export function activeMemberUuids(): Set<string> {
+  return new Set(membersFromJson().map((member) => member.uuid));
+}
+
+/** Warn once per WIB day for a likely member account missing from member.json. */
+export async function warnMissingMember(uuid: string, username: string, name: string): Promise<void> {
+  if (!username.startsWith("jkt48_") || allMemberUuids().has(uuid)) return;
+  const day = wibDate(Date.now());
+  await new Promise<void>((resolve, reject) =>
+    db.run(
+      `INSERT INTO idn_missing_member_warnings (uuid, day) VALUES (?, ?)
+       ON CONFLICT (uuid) DO UPDATE SET day = excluded.day
+       WHERE idn_missing_member_warnings.day <> excluded.day`,
+      [uuid, day],
+      function (err) {
+        if (err) reject(err);
+        else {
+          if (this.changes > 0)
+            console.warn(`[gifts] IDN account missing from member.json: ${username} (${name}, ${uuid})`);
+          resolve();
+        }
+      },
+    ),
+  );
 }
 
 /** Everyone we can track: active members in member.json plus anyone seen live on IDN. */

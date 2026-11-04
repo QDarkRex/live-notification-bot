@@ -113,11 +113,41 @@ const tableSchemas = [
         PRIMARY KEY (slug, gifter_uuid)
     )`,
 
+  `CREATE TABLE IF NOT EXISTS gift_chat_events (
+        streamer_uuid TEXT NOT NULL,
+        slug TEXT NOT NULL,
+        msgid TEXT NOT NULL,
+        event_at INTEGER NOT NULL,
+        received_at INTEGER NOT NULL,
+        day TEXT NOT NULL,
+        gifter_uuid TEXT NOT NULL,
+        gifter_name TEXT NOT NULL,
+        gold INTEGER NOT NULL,
+        point INTEGER NOT NULL,
+        PRIMARY KEY (streamer_uuid, slug, msgid)
+    )`,
+
+  `CREATE TABLE IF NOT EXISTS gift_chat_sessions (
+        streamer_uuid TEXT NOT NULL,
+        slug TEXT NOT NULL,
+        username TEXT NOT NULL,
+        first_attached_at INTEGER,
+        last_attached_at INTEGER,
+        connect_count INTEGER NOT NULL,
+        disconnect_count INTEGER NOT NULL,
+        PRIMARY KEY (streamer_uuid, slug)
+    )`,
+
   `CREATE TABLE IF NOT EXISTS idn_streamers (
         uuid TEXT PRIMARY KEY,
         username TEXT,
         name TEXT,
         updated_at INTEGER
+    )`,
+
+  `CREATE TABLE IF NOT EXISTS idn_missing_member_warnings (
+        uuid TEXT PRIMARY KEY,
+        day TEXT NOT NULL
     )`,
 
   `CREATE TABLE IF NOT EXISTS webhook (

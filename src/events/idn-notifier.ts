@@ -2,7 +2,13 @@ import { fetchGiftRanking } from "@/api/gift/giftService";
 import { Member } from "@/commands/schedule";
 import { CONFIG } from "@/common/utils/constants";
 import db from "@/common/utils/db";
-import { knownStreamers, recordSnapshot, rememberStreamer, sessionLeaderboard } from "@/common/utils/giftTracker";
+import {
+  knownStreamers,
+  recordSnapshot,
+  rememberStreamer,
+  sessionLeaderboard,
+  warnMissingMember,
+} from "@/common/utils/giftTracker";
 import axios from "axios";
 import { type Client, EmbedBuilder, TextChannel } from "discord.js";
 import schedule from "node-schedule";
@@ -345,7 +351,12 @@ async function sendNotifications(client: Client) {
 
   liveStreams = filterLiveStreams(streams);
   for (const stream of liveStreams) {
-    rememberStreamer(stream.creator.uuid, stream.creator.username, stream.creator.name);
+    try {
+      await rememberStreamer(stream.creator.uuid, stream.creator.username, stream.creator.name);
+      await warnMissingMember(stream.creator.uuid, stream.creator.username, stream.creator.name);
+    } catch (error) {
+      console.error(`[gifts] failed to check member.json mapping for ${stream.creator.username}:`, error);
+    }
   }
 
   db.serialize(() => {
