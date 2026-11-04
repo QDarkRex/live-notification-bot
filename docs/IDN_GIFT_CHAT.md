@@ -72,12 +72,21 @@ node scripts/compare-chat-gifts.cjs --db /absolute/path/to/whitelist.db
 ```
 
 This requires an explicit existing database path, opens SQLite read-only, runs
-one query, and closes it before making one request for the latest 100 finished
-lives from idn-podium. It does not poll the database. Run it against a local
-copy when practical. It reports observed Gold/gifter deltas, late attachment
-and possible connection gaps; unmatched sessions remain pending. History may
+one query, and closes it before fetching the latest 100 idn-podium history
+records and IDN's current live list. It does not poll the database. Run it
+against a local copy when practical. It reports observed Gold/gifter deltas,
+late attachment and possible connection gaps. A session still listed live on
+IDN remains pending even if idn-podium already has a matching history record;
+records without a valid end timestamp also remain pending. History may
 store only the timestamp suffix of a slug, so a unique suffix match also
 requires the same member username. Older lives outside this page remain pending.
+
+On 4 November around 20:39 WIB, matching Danella and Intan history records
+existed while IDN's live list still included both sessions. Comparing their
+ongoing chat totals to those records produced provisional differences. A
+history match alone therefore must not be interpreted as a finished-live
+comparison. The tool fails if current live status cannot be checked rather than
+assuming every history match is final.
 
 Back up the production database before deploying the new chat tables and the
 missing-member warning table. Deployment requires owner approval.
