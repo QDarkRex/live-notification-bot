@@ -12,20 +12,33 @@ describe("wibDate", () => {
 });
 
 describe("isNewPeriod", () => {
+  const Y = "2026-11-03";
+  const T = "2026-11-04";
+
   it("keeps growing totals and newly joined gifters in the same period", () => {
-    expect(isNewPeriod(prev(g("a", 100), g("b", 50)), [g("a", 120), g("b", 50), g("c", 5)])).toBe(false);
+    expect(isNewPeriod(prev(g("a", 100), g("b", 50)), [g("a", 120), g("b", 50), g("c", 5)], Y, T)).toBe(false);
   });
 
-  it("detects IDN's reset when a gifter's total drops", () => {
-    expect(isNewPeriod(prev(g("a", 419), g("b", 208)), [g("a", 10), g("b", 208)])).toBe(true);
+  it("detects IDN's midnight reset when a gifter's total drops", () => {
+    expect(isNewPeriod(prev(g("a", 419), g("b", 208)), [g("a", 10), g("b", 208)], Y, T)).toBe(true);
   });
 
   it("detects a reset even when the post-midnight gifters are all new", () => {
-    expect(isNewPeriod(prev(g("a", 419), g("b", 208)), [g("c", 30)])).toBe(true);
+    expect(isNewPeriod(prev(g("a", 419), g("b", 208)), [g("c", 30)], Y, T)).toBe(true);
   });
 
   it("opens nothing for the very first snapshot", () => {
-    expect(isNewPeriod(new Map(), [g("a", 1)])).toBe(false);
+    expect(isNewPeriod(new Map(), [g("a", 1)], Y, T)).toBe(false);
+  });
+
+  it("ignores small gifters falling out of IDN's capped (~50) reply", () => {
+    // Erine 2026-11-03 23:02: a 1-gold gifter dropped off the top-50 while the rest grew.
+    const stored = prev(g("a", 600), g("b", 300), g("tiny1", 1), g("tiny2", 1));
+    expect(isNewPeriod(stored, [g("a", 610), g("b", 300), g("tiny2", 1)], Y, T)).toBe(false);
+  });
+
+  it("never opens a second period on the same WIB day", () => {
+    expect(isNewPeriod(prev(g("a", 419)), [g("a", 10)], T, T)).toBe(false);
   });
 });
 

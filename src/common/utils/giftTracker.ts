@@ -53,12 +53,15 @@ async function createPeriod(streamerUuid: string, now: number): Promise<number> 
   ]);
 }
 
-async function latestPeriod(streamerUuid: string): Promise<number | undefined> {
-  const row = await get<{ id: number }>(
-    "SELECT id FROM gift_periods WHERE streamer_uuid = ? ORDER BY id DESC LIMIT 1",
+async function latestPeriodRow(streamerUuid: string): Promise<{ id: number; day: string } | undefined> {
+  return get<{ id: number; day: string }>(
+    "SELECT id, day FROM gift_periods WHERE streamer_uuid = ? ORDER BY id DESC LIMIT 1",
     [streamerUuid],
   );
-  return row?.id;
+}
+
+async function latestPeriod(streamerUuid: string): Promise<number | undefined> {
+  return (await latestPeriodRow(streamerUuid))?.id;
 }
 
 async function periodTotals(periodId: number): Promise<GifterTotal[]> {
@@ -95,12 +98,14 @@ async function applySnapshot(streamerUuid: string, gifters: GifterTotal[], slug?
   if (slug) await ensureSession(slug, streamerUuid, now);
   if (gifters.length === 0) return; // nothing new, and an empty reply is no evidence of a reset
 
-  let periodId = await latestPeriod(streamerUuid);
-  if (periodId === undefined) {
+  const latest = await latestPeriodRow(streamerUuid);
+  let periodId: number;
+  if (latest === undefined) {
     periodId = await createPeriod(streamerUuid, now);
   } else {
+    periodId = latest.id;
     const prev = new Map((await periodTotals(periodId)).map((g) => [g.uuid, g.gold]));
-    if (isNewPeriod(prev, gifters)) {
+    if (isNewPeriod(prev, gifters, latest.day, wibDate(now))) {
       periodId = await createPeriod(streamerUuid, now);
       console.log(`[gifts] ${streamerUuid}: IDN ranking reset, new period ${periodId} (${wibDate(now)})`);
     }
