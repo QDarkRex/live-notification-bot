@@ -66,6 +66,43 @@ afterEach(() => {
 });
 
 describe("IDN shared chat transport", () => {
+  it.each([
+    ["bare PING", "PING :irc-1.idn.app", "PONG :irc-1.idn.app"],
+    ["tagged PING", "@time=2026-11-05T01:40:16.360Z PING :irc-1.idn.app", "PONG :irc-1.idn.app"],
+    [
+      "tagged prefixed PING",
+      "@time=2026-11-05T01:40:16.360Z :irc-1.idn.app PING :irc-1.idn.app",
+      "PONG :irc-1.idn.app",
+    ],
+  ])("answers %s on the same socket and keeps it out of line dispatch", async (_label, ping, pong) => {
+    mocks.axiosGet.mockResolvedValue({
+      data: '<script id="__NEXT_DATA__">{"props":{"pageProps":{"livestream":{"chat_room_id":"room"}}}}</script>',
+    });
+    const received: string[] = [];
+    const manager = new IdnChatManager((line) => received.push(line));
+    const ws = await startManager(manager);
+
+    ws.emit("message", ping);
+
+    expect(ws.sent).toContain(`${pong}\r\n`);
+    expect(received).toEqual([]);
+  });
+
+  it("passes through gift payloads containing PING without treating them as controls", async () => {
+    mocks.axiosGet.mockResolvedValue({
+      data: '<script id="__NEXT_DATA__">{"props":{"pageProps":{"livestream":{"chat_room_id":"arn:aws:ivschat:us-east-1:050891932989:room/example"}}}}</script>',
+    });
+    const received: string[] = [];
+    const manager = new IdnChatManager((line) => received.push(line));
+    const ws = await startManager(manager);
+    const line = giftLine().replace('"name":"Gifter"', '"name":"PING"');
+
+    ws.emit("message", line);
+
+    expect(received).toEqual([line]);
+    expect(ws.sent.some((sent: string) => sent.startsWith("PONG"))).toBe(false);
+  });
+
   it("dispatches the gift line from its attached session socket", async () => {
     mocks.axiosGet.mockResolvedValue({
       data: '<script id="__NEXT_DATA__">{"props":{"pageProps":{"livestream":{"chat_room_id":"arn:aws:ivschat:us-east-1:050891932989:room/example"}}}}</script>',

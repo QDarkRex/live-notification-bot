@@ -118,6 +118,30 @@ command) for `CHATHISTORY`. The advertised capabilities also lacked a history
 capability. This did not establish a usable replay method; no unverified
 history recovery was implemented.
 
+## Tagged PING correction
+
+A controlled connection on 5 November reproduced a transport bug: after
+negotiating `server-time`, IDN sent
+`@time=2026-11-05T01:40:16.360Z PING :irc-1.idn.app`. The old handler checked
+only `line.startsWith("PING")`, so it did not reply. At 01:42:16 UTC the server
+reported a ping timeout and closed the connection, about four minutes after
+opening. IRC time tags are permitted by the
+[server-time extension](https://ircv3.net/specs/extensions/server-time).
+
+The correction recognizes PING with optional tags/server prefix and preserves
+the parameter tail in PONG. Other messages still reach their callbacks
+unchanged. It does not change reconnect backoff, room ownership, Gold values,
+deduplication, or the authoritative source. The historical comparisons above
+used the old handler; fresh finished-session comparisons are needed after an
+approved deployment. The correction cannot reconstruct past missed gifts or
+resolve the separate ranking-day ambiguity.
+
+The follow-up anonymous control connection used the corrected application
+pattern and stayed open for about six minutes. It answered all three observed
+PINGs, including two tagged periodic PINGs, with no ping-timeout error. It was
+closed by the bounded test. This verifies heartbeat handling in that window;
+it is not a completed-live Gold validation or proof against other network gaps.
+
 ## Manual comparison
 
 ```sh

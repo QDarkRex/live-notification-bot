@@ -134,8 +134,9 @@ class IdnChatConnection {
   }
 
   private handleLine(line: string) {
-    if (line.startsWith("PING")) {
-      this.send(line.replace(/^PING/, "PONG"));
+    const ping = /^(?:@\S+ )?(?::\S+ )?PING( .*)?$/.exec(line);
+    if (ping) {
+      this.send(`PONG${ping[1] ?? ""}`);
       return;
     }
     if (/ CAP \S+ LS /.test(line)) {
