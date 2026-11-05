@@ -296,13 +296,19 @@ interface EndLiveGifter {
 }
 
 /** Top gifters of the whole session, including gifts from before midnight. */
-async function endLiveGifters(user: { user_id: string; slug: string }): Promise<EndLiveGifter[]> {
+async function endLiveGifters(user: { user_id: string; slug: string }): Promise<{
+  gifters: EndLiveGifter[];
+  complete: boolean;
+}> {
   // One last poll so gifts from the final seconds of the live count.
   await updateTopGifts(user.user_id, user.slug);
   try {
-    const tracked = await sessionLeaderboard(user.slug, 10);
+    const tracked = await sessionLeaderboard(user.slug, null);
     if (tracked) {
-      return tracked.map((g, i) => ({ rank: i + 1, name: g.name, total_gold: g.gold, total_point: g.point }));
+      return {
+        gifters: tracked.map((g, i) => ({ rank: i + 1, name: g.name, total_gold: g.gold, total_point: g.point })),
+        complete: true,
+      };
     }
   } catch (error) {
     console.error("❗ Failed to read tracked session gifts", error);
@@ -313,7 +319,7 @@ async function endLiveGifters(user: { user_id: string; slug: string }): Promise<
       [user.user_id],
       (err, rows: any[]) => {
         if (err) console.error("❗ Failed to retrieve top gifts", err);
-        resolve(err ? [] : rows);
+        resolve({ gifters: err ? [] : rows, complete: false });
       },
     );
   });
@@ -507,7 +513,8 @@ async function sendNotifications(client: Client) {
 
             for (const user of inactiveUsers) {
               const embed = createEndLiveEmbed(user);
-              const topGifts = await endLiveGifters(user);
+              const endGifts = await endLiveGifters(user);
+              const topGifts = endGifts.gifters;
               const teks = "```";
               const line = (gift: EndLiveGifter) =>
                 `${gift.rank}. ${gift.name}\n(${gift.total_gold} Gold) | (${gift.total_point} Point)`;
@@ -518,6 +525,14 @@ async function sendNotifications(client: Client) {
                 { name: "Top Gifters (1-5)", value: column(topGifts.slice(0, 5)), inline: true },
                 { name: "Top Gifters (6-10)", value: column(topGifts.slice(5, 10)), inline: true },
               );
+              if (endGifts.complete) {
+                const totalGold = topGifts.reduce((sum, gift) => sum + gift.total_gold, 0);
+                embed.addFields({
+                  name: "Total Sesi",
+                  value: `${totalGold.toLocaleString("id-ID")} Gold • ${topGifts.length.toLocaleString("id-ID")} gifter • estimasi Rp2.500/Gold: Rp ${(totalGold * 2500).toLocaleString("id-ID")}`,
+                  inline: false,
+                });
+              }
 
               for (const channelId of channelIds) {
                 try {

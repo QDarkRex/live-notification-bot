@@ -23,7 +23,7 @@ export const data = new SlashCommandBuilder()
 
 const fmt = (n: number) => n.toLocaleString("id-ID");
 
-function findStreamer(streamers: Streamer[], query: string): Streamer | undefined {
+export function findStreamer(streamers: Streamer[], query: string): Streamer | undefined {
   const q = query
     .trim()
     .toLowerCase()

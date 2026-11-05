@@ -179,24 +179,70 @@ export function recordSnapshot(streamerUuid: string, gifters: GifterTotal[], slu
   return next;
 }
 
-/** Gifters of one live session, summed across midnight. null if the session was never tracked. */
-export async function sessionLeaderboard(slug: string, limit = 10): Promise<GifterTotal[] | null> {
-  const session = await get<{ streamer_uuid: string; start_period_id: number }>(
-    "SELECT streamer_uuid, start_period_id FROM gift_sessions WHERE slug = ?",
+/** Gifters summed across midnight; null if untracked. Pass a null limit for every gifter. */
+export async function sessionLeaderboard(slug: string, limit: number | null = 10): Promise<GifterTotal[] | null> {
+  const session = await get<{ streamer_uuid: string; start_period_id: number; started_at: number; rowid: number }>(
+    "SELECT rowid, streamer_uuid, start_period_id, started_at FROM gift_sessions WHERE slug = ?",
     [slug],
   );
   if (!session) return null;
+  // The next session's baseline freezes the last period before that live's gifts.
+  // Use it instead of the mutable totals in that boundary period.
+  const next = await get<{ slug: string; start_period_id: number }>(
+    `SELECT slug, start_period_id FROM gift_sessions
+     WHERE streamer_uuid = ? AND (started_at > ? OR (started_at = ? AND rowid > ?))
+     ORDER BY started_at, rowid LIMIT 1`,
+    [session.streamer_uuid, session.started_at, session.started_at, session.rowid],
+  );
   const rows = await all<TotalRow>(
     `SELECT t.gifter_uuid, t.gifter_name, t.total_gold, t.total_point
      FROM gift_period_totals t JOIN gift_periods p ON p.id = t.period_id
-     WHERE p.streamer_uuid = ? AND p.id >= ? ORDER BY p.id`,
-    [session.streamer_uuid, session.start_period_id],
+     WHERE p.streamer_uuid = ? AND p.id >= ? ${next ? "AND p.id < ?" : ""} ORDER BY p.id`,
+    next
+      ? [session.streamer_uuid, session.start_period_id, next.start_period_id]
+      : [session.streamer_uuid, session.start_period_id],
   );
+  if (next) {
+    const boundary = await all<TotalRow>(
+      `SELECT b.gifter_uuid, COALESCE(t.gifter_name, b.gifter_uuid) AS gifter_name,
+              b.total_gold, b.total_point
+       FROM gift_session_baseline b LEFT JOIN gift_period_totals t
+         ON t.period_id = ? AND t.gifter_uuid = b.gifter_uuid
+       WHERE b.slug = ?`,
+      [next.start_period_id, next.slug],
+    );
+    rows.push(...boundary);
+  }
   const baseline = await all<TotalRow>(
     "SELECT gifter_uuid, '' AS gifter_name, total_gold, total_point FROM gift_session_baseline WHERE slug = ?",
     [slug],
   );
-  return sessionTotals(rows.map(toGifter), new Map(baseline.map((b) => [b.gifter_uuid, toGifter(b)]))).slice(0, limit);
+  const result = sessionTotals(rows.map(toGifter), new Map(baseline.map((b) => [b.gifter_uuid, toGifter(b)])));
+  return limit === null ? result : result.slice(0, limit);
+}
+
+export interface FinishedSession {
+  slug: string;
+  streamer_uuid: string;
+  started_at: number;
+  gifters: GifterTotal[];
+}
+
+/** Read tracked sessions since a timestamp, omitting every streamer currently live. */
+export async function finishedSessions(sinceMs: number): Promise<FinishedSession[]> {
+  const sessions = await all<{ slug: string; streamer_uuid: string; started_at: number }>(
+    `SELECT s.slug, s.streamer_uuid, s.started_at FROM gift_sessions s
+     WHERE s.started_at >= ?
+       AND NOT EXISTS (SELECT 1 FROM idn_live l WHERE l.user_id = s.streamer_uuid)
+     ORDER BY s.started_at`,
+    [sinceMs],
+  );
+  const result: FinishedSession[] = [];
+  for (const session of sessions) {
+    const gifters = await sessionLeaderboard(session.slug, null);
+    if (gifters) result.push({ ...session, gifters });
+  }
+  return result;
 }
 
 /** Tracked gold per streamer for periods first seen within [startDay, endDay] (WIB dates). */

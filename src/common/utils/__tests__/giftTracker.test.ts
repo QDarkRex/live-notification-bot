@@ -194,3 +194,64 @@ describe("giftTracker chat reconciliation at reset", () => {
     expect(await periods(db)).toHaveLength(2);
   });
 });
+
+describe("giftTracker session history", () => {
+  it("bounds an older session at the next session while preserving its starting period", async () => {
+    const { tracker } = await load();
+    setNow(wib("2026-11-04", "09:00:00"));
+    await tracker.recordSnapshot(S, [g("A", 100)], "first");
+    setNow(wib("2026-11-04", "10:00:00"));
+    await tracker.recordSnapshot(S, [g("A", 100)], "second");
+    setNow(wib("2026-11-04", "10:01:00"));
+    await tracker.recordSnapshot(S, [g("A", 150), g("B", 50)], "second");
+    expect((await tracker.sessionLeaderboard("first", null))?.map((x) => [x.uuid, x.gold])).toEqual([["A", 100]]);
+    expect((await tracker.sessionLeaderboard("second", null))?.map((x) => [x.uuid, x.gold])).toEqual([
+      ["A", 50],
+      ["B", 50],
+    ]);
+    setNow(wib("2026-11-05", "09:00:00"));
+    await tracker.recordSnapshot(S, [g("A", 20), g("C", 5)], "second");
+    expect((await tracker.sessionLeaderboard("first", null))?.map((x) => [x.uuid, x.gold])).toEqual([["A", 100]]);
+  });
+
+  it("keeps a session stable when the next session starts after midnight but anchors the old period", async () => {
+    const { tracker } = await load();
+    setNow(wib("2026-11-04", "23:59:50"));
+    await tracker.recordSnapshot(S, [g("A", 100)], "before-midnight");
+    setNow(wib("2026-11-05", "00:06:00"));
+    await tracker.recordSnapshot(S, [g("A", 10)], "after-midnight");
+    expect((await tracker.sessionLeaderboard("before-midnight", null))?.map((x) => [x.uuid, x.gold])).toEqual([
+      ["A", 100],
+    ]);
+    expect((await tracker.sessionLeaderboard("after-midnight", null))?.map((x) => [x.uuid, x.gold])).toEqual([
+      ["A", 10],
+    ]);
+    setNow(wib("2026-11-05", "00:07:00"));
+    await tracker.recordSnapshot(S, [g("A", 20)], "after-midnight");
+    expect((await tracker.sessionLeaderboard("before-midnight", null))?.map((x) => [x.uuid, x.gold])).toEqual([
+      ["A", 100],
+    ]);
+  });
+
+  it("keeps the default top ten, supports an unlimited list, and returns null for unknown sessions", async () => {
+    const { tracker } = await load();
+    setNow(wib("2026-11-04", "09:00:00"));
+    const gifters = Array.from({ length: 12 }, (_, i) => g(`G${i}`, 120 - i));
+    await tracker.recordSnapshot(S, gifters, "many-gifters");
+    expect((await tracker.sessionLeaderboard("many-gifters"))?.length).toBe(10);
+    expect((await tracker.sessionLeaderboard("many-gifters", null))?.length).toBe(12);
+    expect(await tracker.sessionLeaderboard("unknown", null)).toBeNull();
+  });
+
+  it("returns finished sessions since the bound and excludes currently live streamers", async () => {
+    const { tracker, db } = await load();
+    setNow(wib("2026-11-04", "09:00:00"));
+    await tracker.recordSnapshot(S, [g("A", 1)], "old");
+    await tracker.recordSnapshot("other", [g("A", 1)], "live");
+    await new Promise<void>((resolve, reject) =>
+      db.run("INSERT INTO idn_live (user_id) VALUES (?)", ["other"], (e: Error | null) => (e ? reject(e) : resolve())),
+    );
+    expect(await tracker.finishedSessions(wib("2026-11-04", "09:01:00"))).toEqual([]);
+    expect((await tracker.finishedSessions(wib("2026-11-04", "08:59:00"))).map((s) => s.slug)).toEqual(["old"]);
+  });
+});

@@ -48,6 +48,10 @@ export async function run({ interaction, client }: SlashCommandProps) {
           "Gold IDN Live per member selama event Best Supporter (3 Nov–31 Des). Tanpa `member`: peringkat semua member. Dengan `member`: top 10 supporter di room member itu.",
       },
       {
+        name: "/podium `[member]` `[periode]`",
+        value: "Rata-rata Gold podium #1–#3 per live. Periode: 7 hari, 30 hari (default), atau event Best Supporter.",
+      },
+      {
         name: "/tiket `kode`",
         value:
           "Cek sisa tiket JKT48 (theater show / 2-shot / video call / photobook / photocard).\nContoh: `/tiket kode:SHCB04` (show) atau `/tiket kode:EXCB75` (exclusive).",
