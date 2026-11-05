@@ -121,6 +121,43 @@ describe("IDN shared chat transport", () => {
     expect(lifecycle.onAttached).toHaveBeenCalledOnce();
   });
 
+  it("passes a gift whose JSON contains ' 001 ' and ' CAP x LS ' through unchanged", async () => {
+    mocks.axiosGet.mockResolvedValue({
+      data: '<script id="__NEXT_DATA__">{"props":{"pageProps":{"livestream":{"chat_room_id":"arn:aws:ivschat:us-east-1:050891932989:room/example"}}}}</script>',
+    });
+    const received: string[] = [];
+    const manager = new IdnChatManager((line) => received.push(line));
+    const ws = await startManager(manager);
+    const joinsBefore = ws.sent.filter((sent: string) => sent.startsWith("JOIN")).length;
+    const capsBefore = ws.sent.filter((sent: string) => sent.startsWith("CAP REQ")).length;
+    const line = giftLine().replace('"name":"Gifter"', '"name":"agent 001 x CAP x LS y"');
+
+    ws.emit("message", line);
+
+    expect(received).toEqual([line]);
+    expect(ws.sent.filter((sent: string) => sent.startsWith("JOIN")).length).toBe(joinsBefore);
+    expect(ws.sent.filter((sent: string) => sent.startsWith("CAP REQ")).length).toBe(capsBefore);
+  });
+
+  it("still handles real server 001 and CAP LS lines (plain and tagged)", async () => {
+    mocks.axiosGet.mockResolvedValue({
+      data: '<script id="__NEXT_DATA__">{"props":{"pageProps":{"livestream":{"chat_room_id":"room"}}}}</script>',
+    });
+    const received: string[] = [];
+    const manager = new IdnChatManager((line) => received.push(line));
+    manager.sync([member]);
+    await vi.waitFor(() => expect(mocks.sockets).toHaveLength(1));
+    const ws = mocks.sockets[0];
+    ws.readyState = 1;
+    ws.emit("open");
+    ws.emit("message", ":irc.idn.app CAP * LS :server-time message-tags");
+    expect(ws.sent.some((sent: string) => sent.startsWith("CAP REQ"))).toBe(true);
+    expect(ws.sent).toContain("CAP END\r\n");
+    ws.emit("message", "@time=2026-11-05T01:00:00.000Z :irc.idn.app 001 idn-x :Welcome");
+    expect(ws.sent).toContain("JOIN #room\r\n");
+    expect(received).toEqual([]);
+  });
+
   it("retains healthy fast reconnect and throttled slow reconnect behavior", async () => {
     mocks.axiosGet.mockResolvedValue({
       data: '<script id="__NEXT_DATA__">{"props":{"pageProps":{"livestream":{"chat_room_id":"room"}}}}</script>',

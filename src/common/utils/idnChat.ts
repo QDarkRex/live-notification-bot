@@ -139,12 +139,12 @@ class IdnChatConnection {
       this.send(`PONG${ping[1] ?? ""}`);
       return;
     }
-    if (/ CAP \S+ LS /.test(line)) {
+    if (/^(?:@\S+ )?(?::\S+ )?CAP \S+ LS(?: |$)/.test(line)) {
       this.send(`CAP REQ :${CAP_REQ}`);
       this.send("CAP END");
       return;
     }
-    if (/ 001 /.test(line) && this.channel) {
+    if (/^(?:@\S+ )?(?::\S+ )?001(?: |$)/.test(line) && this.channel) {
       this.send(`JOIN #${this.channel}`);
       if (!this.attached) {
         this.attached = true;
