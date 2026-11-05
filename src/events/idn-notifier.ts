@@ -2,6 +2,7 @@ import { fetchGiftRanking } from "@/api/gift/giftService";
 import { Member } from "@/commands/schedule";
 import { CONFIG } from "@/common/utils/constants";
 import db from "@/common/utils/db";
+import { leadChangesFor, markLiveEnded, maybeRecordRace, upsertLiveMeta } from "@/common/utils/giftHistory";
 import {
   knownStreamers,
   recordSnapshot,
@@ -272,6 +273,7 @@ async function updateTopGifts(uuid: string, slug?: string) {
       ranking.map((item) => ({ uuid: item.uuid, name: item.name, gold: item.total_gold, point: item.total_point })),
       slug,
     );
+    if (slug) await maybeRecordRace(slug);
     if (!slug) return;
     db.serialize(() => {
       db.run("DELETE FROM top_gifts WHERE uuid = ?", [uuid]);
@@ -362,6 +364,20 @@ async function sendNotifications(client: Client) {
       await warnMissingMember(stream.creator.uuid, stream.creator.username, stream.creator.name);
     } catch (error) {
       console.error(`[gifts] failed to check member.json mapping for ${stream.creator.username}:`, error);
+    }
+    // Title/start/viewers for /riwayat and /nowlive; idempotent, so every poll may repeat it.
+    try {
+      const startedAt = Date.parse(String(stream.live_at));
+      await upsertLiveMeta({
+        slug: stream.slug,
+        streamerUuid: stream.creator.uuid,
+        title: stream.title,
+        imageUrl: stream.image_url,
+        startedAt: Number.isNaN(startedAt) ? null : startedAt,
+        viewCount: typeof stream.view_count === "number" ? stream.view_count : null,
+      });
+    } catch (error) {
+      console.error(`[gifts] failed to store live metadata for ${stream.slug}:`, error);
     }
   }
 
@@ -515,6 +531,15 @@ async function sendNotifications(client: Client) {
               const embed = createEndLiveEmbed(user);
               const endGifts = await endLiveGifters(user);
               const topGifts = endGifts.gifters;
+              try {
+                await markLiveEnded(user.slug, user.user_id, Date.now());
+              } catch (error) {
+                console.error(`[gifts] failed to store live end for ${user.slug}:`, error);
+              }
+              const leadChanges = await leadChangesFor(user.slug);
+              if (leadChanges > 0) {
+                embed.setDescription(`${embed.data.description ?? ""}\n🏁 Pimpinan berganti ${leadChanges} kali`);
+              }
               const teks = "```";
               const line = (gift: EndLiveGifter) =>
                 `${gift.rank}. ${gift.name}\n(${gift.total_gold} Gold) | (${gift.total_point} Point)`;

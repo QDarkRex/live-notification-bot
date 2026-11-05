@@ -150,6 +150,27 @@ const tableSchemas = [
         day TEXT NOT NULL
     )`,
 
+  // Live metadata for /riwayat and /nowlive (written by idn-notifier.ts).
+  `CREATE TABLE IF NOT EXISTS idn_sessions_meta (
+        slug TEXT PRIMARY KEY,
+        streamer_uuid TEXT NOT NULL,
+        title TEXT,
+        image_url TEXT,
+        started_at INTEGER,
+        ended_at INTEGER,
+        view_count INTEGER
+    )`,
+
+  // Top-3 session gifters, at most once per minute while live (lead changes).
+  `CREATE TABLE IF NOT EXISTS gift_race_snapshots (
+        slug TEXT NOT NULL,
+        at INTEGER NOT NULL,
+        rank1_uuid TEXT, rank1_gold INTEGER,
+        rank2_uuid TEXT, rank2_gold INTEGER,
+        rank3_uuid TEXT, rank3_gold INTEGER,
+        PRIMARY KEY (slug, at)
+    )`,
+
   `CREATE TABLE IF NOT EXISTS webhook (
         url TEXT,
         user_id TEXT,

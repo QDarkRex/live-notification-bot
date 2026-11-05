@@ -11,13 +11,13 @@ vi.mock("@/common/utils/giftTracker", () => mocks);
 
 import { run } from "../podium";
 
-function makeInteraction(values: { member?: string | null; periode?: string | null } = {}) {
+function makeInteraction(values: { member?: string | null; periode?: string | null; mode?: string | null } = {}) {
   const editReply = vi.fn();
   const deferReply = vi.fn();
   return {
     editReply,
     deferReply,
-    options: { getString: vi.fn((key: string) => values[key as "member" | "periode"] ?? null) },
+    options: { getString: vi.fn((key: string) => values[key as "member" | "periode" | "mode"] ?? null) },
   };
 }
 
@@ -107,5 +107,30 @@ describe("/podium", () => {
     expect(description.match(/Gold\/live/g)).toHaveLength(15);
     expect(description).toContain("Member 0");
     expect(description).not.toContain("Member 15");
+  });
+
+  it("overall mode ranks members by total Gold", async () => {
+    mocks.finishedSessions.mockResolvedValue([
+      session("active", Date.now() - 1_000, [100, 60, 30]),
+      session("second", Date.now() - 2_000, [500, 60, 30]),
+    ]);
+    const interaction = makeInteraction({ mode: "overall" });
+    await run({ interaction } as never);
+    const embed = interaction.editReply.mock.calls[0][0].embeds[0];
+    expect(embed.data.title).toContain("Overall");
+    expect(embed.data.description.indexOf("Michie")).toBeLessThan(embed.data.description.indexOf("Aralie"));
+    expect(embed.data.description).toContain("590");
+  });
+
+  it("top-3 mode lists repeat podium supporters", async () => {
+    mocks.finishedSessions.mockResolvedValue([
+      session("active", Date.now() - 1_000, [100, 60, 30]),
+      session("active", Date.now() - 2_000, [90, 60, 30]),
+    ]);
+    const interaction = makeInteraction({ mode: "top3" });
+    await run({ interaction } as never);
+    const embed = interaction.editReply.mock.calls[0][0].embeds[0];
+    expect(embed.data.description).toContain("g0");
+    expect(embed.data.description).toContain("2× top 3");
   });
 });

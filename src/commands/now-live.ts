@@ -1,4 +1,6 @@
+import { formatDuration } from "@/commands/riwayat";
 import db from "@/common/utils/db";
+import { liveSnapshotBySlug } from "@/common/utils/giftHistory";
 import type { SlashCommandProps } from "commandkit";
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 
@@ -13,7 +15,7 @@ export async function run({ interaction, client }: SlashCommandProps) {
       `SELECT name AS member_name, username, slug, startLive AS start_live, 'IDN Live' AS platform, NULL AS room_url_key FROM idn_live
        UNION
        SELECT displayName AS member_name, NULL AS username, NULL AS slug, startLive AS start_live, 'Showroom' AS platform, room_url_key FROM showroom_live `,
-      (err, rows) => {
+      async (err, rows) => {
         if (err) {
           console.error("Failed to retrieve live members", err);
           return interaction.reply({
@@ -40,6 +42,7 @@ export async function run({ interaction, client }: SlashCommandProps) {
         }
 
         const txt = "```";
+        const extra = await liveSnapshotBySlug().catch(() => new Map());
 
         const description = rows
           .map((row: any) => {
@@ -49,7 +52,14 @@ export async function run({ interaction, client }: SlashCommandProps) {
             } else if (row.platform === "Showroom") {
               link = `https://www.showroom-live.com/r/${row.room_url_key}`;
             }
-            return `${txt}Nama: ${row.member_name}\nStart Live: ${row.start_live}\nLive: ${row.platform}${txt}\n[Tonton Live ${row.member_name}](${link})`;
+            const info = extra.get(row.slug);
+            const stats = [
+              typeof info?.viewCount === "number" ? `Penonton: ${info.viewCount.toLocaleString("id-ID")}` : "",
+              info?.startedAt ? `Durasi: ${formatDuration(Date.now() - info.startedAt)}` : "",
+            ]
+              .filter(Boolean)
+              .join("\n");
+            return `${txt}Nama: ${row.member_name}\nStart Live: ${row.start_live}\nLive: ${row.platform}${stats ? `\n${stats}` : ""}${txt}\n[Tonton Live ${row.member_name}](${link})`;
           })
           .join("\n\n");
 

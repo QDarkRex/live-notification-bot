@@ -37,7 +37,10 @@ export async function run({ interaction, client }: SlashCommandProps) {
     .setTitle("📋 Info JKT48 & Lainnya")
     .setDescription("Perintah informasi yang bisa dipakai siapa saja.")
     .addFields(
-      { name: "/nowlive", value: "Lihat daftar member yang sedang live sekarang." },
+      {
+        name: "/nowlive",
+        value: "Lihat daftar member yang sedang live sekarang, lengkap dengan jumlah penonton & durasi (IDN).",
+      },
       { name: "/schedule", value: "Lihat jadwal show theater JKT48." },
       { name: "/events", value: "Lihat jadwal event off-air JKT48 yang akan datang." },
       { name: "/birthday", value: "Lihat 10 ulang tahun member JKT48 terdekat." },
@@ -48,8 +51,14 @@ export async function run({ interaction, client }: SlashCommandProps) {
           "Gold IDN Live per member selama event Best Supporter (3 Nov–31 Des). Tanpa `member`: peringkat semua member. Dengan `member`: top 10 supporter di room member itu.",
       },
       {
-        name: "/podium `[member]` `[periode]`",
-        value: "Rata-rata Gold podium #1–#3 per live. Periode: 7 hari, 30 hari (default), atau event Best Supporter.",
+        name: "/podium `[member]` `[periode]` `[mode]`",
+        value:
+          "Rata-rata Gold podium #1–#3 per live. Periode: 7 hari, 30 hari (default), atau event Best Supporter. `mode`: per member (default), overall (total Gold per member), atau top-3 counts (supporter paling sering masuk top 3).",
+      },
+      {
+        name: "/riwayat `[member]` `[jumlah]`",
+        value:
+          "Riwayat live IDN terakhir (default 5, maks 10): judul, jam mulai, durasi, top 3 gifter, total Gold & estimasi Rupiah.",
       },
       {
         name: "/tiket `kode`",
