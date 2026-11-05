@@ -9,9 +9,10 @@ embeds. There is no automatic switch or addition of chat totals to poll totals.
 A bounded live capture joined Virgi, Maira and Ribka's actual IDN rooms. One
 initial gift was captured from Maira; a subsequent five-minute capture used two
 observer sockets and received 34 gift frames representing 17 distinct events.
-All 17 events had the same `msgid`, server `time` and payload on both sockets.
-The 17 unique events contained 372 Gold. All observed `gift.weight` values were
-1; a quantity multiplier has not been demonstrated and must not be invented.
+All 17 events had the same `msgid` and monetary/room identity on both sockets;
+one event had slightly different IRC time tags. The 17 unique events contained
+372 Gold. All weights in this initial sample were 1. A later weight-10 example
+is documented below; weight must not be assumed to multiply Gold.
 
 Shape of a real Maira broadcast (gifter identity replaced in this example):
 
@@ -40,9 +41,11 @@ whole-live validation.
   even if its sender, gift and timestamp match an earlier gift.
 - A single insert stores the event; totals are SQL sums over stored events.
   There is no separate incremental counter that can diverge after a crash.
-- The event's server timestamp determines its WIB day. A replay received after
-  midnight remains assigned to its original day, and session totals can span
-  midnight. Arrival time is retained only as capture evidence.
+- The first stored IRC time tag determines the row's WIB day. These tags can
+  vary between deliveries; they are not certified transaction timestamps.
+  A replay with the same ID cannot insert another row even if its time tag
+  crosses midnight. Session totals can span midnight. Arrival time is retained
+  only as capture evidence.
 - Missing stable message IDs or invalid gift data are rejected and logged.
   There is no guessed deduplication key. Only the expected IDNOdin sender,
   channel and live slug are accepted.
@@ -64,6 +67,56 @@ IDN implementation.
 Keep polling authoritative until several finished lives have been compared,
 including busy rooms with more than 50 gifters, and investigate differences.
 Switching the displayed totals is a separate change after this evidence exists.
+
+## First finished-session comparison
+
+On 4 November around 21:05 WIB, Michie's session `261104202016` was no longer
+listed live and could be compared. Chat held 887 Gold / 3,548 Points from 13
+gifters; the existing poll-based session calculation held 888 / 3,552 from 13.
+The idn-podium record also reported 888 Gold and 13 gifters. This comparison did
+not pass exact agreement.
+
+One gifter accounted for the entire difference: polling held 3 Gold / 12 Points,
+while chat contained one 2-Gold / 8-Point event. The listener attached about
+three seconds after the reported start and recorded 11 unexpected disconnects
+with healthy reconnects. These are possible capture gaps, but the evidence does
+not establish when an extra 1-Gold event occurred or prove which source caused
+the discrepancy. No synthetic correction was applied. The primary source was
+not switched to chat.
+
+## Controlled audit and overnight results
+
+Two local observers watched nine member rooms on 4 November, 21:19:22–21:27:22
+WIB. They recorded 109 frames representing 56 unique gifts (1,796 Gold in the
+payloads); 53 IDs were seen by both observers. Their monetary payloads agreed.
+The bot contained 55 of those exact IDs with matching Gold and Point values.
+One Elin gift of 5 Gold / 20 Points was absent at the audit query and remained
+absent in the 5 November read-only check. No duplicate rows or monetary value
+mismatches were found for the matched IDs.
+
+IRC time tags differed on 47 dual-observed IDs; 19 bot/observer comparisons
+also had timestamp-only differences. These must not be reported as Gold
+mismatches. The Elin IRC tag, local receive times and bot disconnect log use
+different clock domains, so proximity alone does not establish exactly why
+that event was not recorded. Both observers also reconnected: their union is
+evidence for observed events, not proof of a complete feed.
+
+A Gracie `MELUNCUR!!` gift had `gold: 599`, `point: 2396`, `weight: 10`.
+For that gifter, both the stored poll calculation and chat held 619 Gold from
+the observed 599 + 20 contributions. This supports using the Gold field once
+for this real example; multiplying it by 10 would contradict those totals.
+
+The 5 November comparison found 21 finished active-member sessions: eight
+matched idn-podium exactly, while 13 had lower chat Gold totals. No positive
+Gold difference appeared in this sample. All carried late-attachment and
+possible-gap flags, and the largest reference room had 42 gifters. This does
+not validate full coverage or a room with more than 50 gifters. Chat remains
+shadow-only; no totals were repaired to force agreement.
+
+An anonymous protocol check on 5 November returned numeric 421 (unknown
+command) for `CHATHISTORY`. The advertised capabilities also lacked a history
+capability. This did not establish a usable replay method; no unverified
+history recovery was implemented.
 
 ## Manual comparison
 

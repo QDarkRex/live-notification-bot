@@ -41,6 +41,21 @@ describe("parseChatGift", () => {
     });
   });
 
+  it("uses the observed gift values directly without multiplying by its weight", () => {
+    // Live Gracie capture (2026-11-04): this gifter's poll/chat totals were 619 Gold from 599 + 20.
+    const observedMember = { ...member, slug: "hiii-261104202455" };
+    const event = parseChatGift(
+      line({
+        slug: observedMember.slug,
+        msgid: "gracie-observed-gift",
+        gift: { name: "MELUNCUR!!", slug: "meluncur-1762769857", gold: 599, point: 2396, weight: 10 },
+      }),
+      observedMember,
+      channel,
+    );
+    expect(event).toMatchObject({ gold: 599, point: 2396 });
+  });
+
   it("preserves distinct messages from the same user and ignores non-gifts", () => {
     expect(parseChatGift(line(), member, channel)?.msgid).toBe("201~1792744405~5091084");
     expect(parseChatGift(line({ msgid: "another-event-id" }), member, channel)?.msgid).toBe("another-event-id");

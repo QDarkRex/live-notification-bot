@@ -151,6 +151,25 @@ describe("gift chat event ledger", () => {
     const reopened = await loadGiftChat(databasePath);
     expect(await reopened.giftChat.recordChatGift(duplicate)).toBe(false);
     expect(await reopened.giftChat.recordChatGift(beforeMidnight)).toBe(false);
+    // Observer copies can carry slightly different IRC times; the same msgid keeps its original day and value.
+    const replayAcrossMidnight = reopened.giftChat.parseChatGift(
+      eventLine("2026-11-04T17:00:00.001Z", "before-midnight", "midnight-gifter", 7),
+      { uuid: "streamer", username: "jkt48_example", name: "Example", slug: "session-one" },
+      "arn",
+      Date.parse("2026-11-04T17:02:00.001Z"),
+    )!;
+    expect(replayAcrossMidnight.day).toBe("2026-11-05");
+    expect(replayAcrossMidnight.received_at).not.toBe(beforeMidnight.received_at);
+    expect(await reopened.giftChat.recordChatGift(replayAcrossMidnight)).toBe(false);
+    expect(await reopened.giftChat.chatDailyTotals("streamer", "2026-11-04")).toContainEqual({
+      uuid: "midnight-gifter",
+      name: "midnight-gifter",
+      gold: 7,
+      point: 28,
+    });
+    expect(await reopened.giftChat.chatDailyTotals("streamer", "2026-11-05")).toEqual([
+      { uuid: "midnight-gifter", name: "midnight-gifter", gold: 9, point: 36 },
+    ]);
     expect((await reopened.giftChat.chatSessionTotals("session-one", "streamer")).length).toBe(56);
     expect(
       (await reopened.giftChat.chatSessionTotals("session-one", "streamer")).find(
