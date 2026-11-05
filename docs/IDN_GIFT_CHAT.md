@@ -167,3 +167,14 @@ assuming every history match is final.
 
 Back up the production database before deploying the new chat tables and the
 missing-member warning table. Deployment requires owner approval.
+
+## Reconciling the previous day at reset (2026-11-05)
+
+Polling loses gifts in the last ~30 s before midnight (the ranking lags, then
+resets to zero). When the poll tracker opens a new period it now raises the
+previous period's per-gifter totals to the chat ledger's totals for that
+period's WIB day: `total = MAX(poll, chat)` per gifter, inserting gifters the
+poll never listed. Chat is never added to poll totals, and the step is
+idempotent (safe on SQLITE_BUSY retry). Chat can therefore only raise a closed
+day, and only up to what the chat ledger actually saw; live-session and
+current-day totals still come from polling alone.

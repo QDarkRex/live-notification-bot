@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import type { Member } from "@/commands/schedule";
 import db from "@/common/utils/db";
+import { chatDailyTotals } from "@/common/utils/giftChat";
 import { type GifterTotal, isNewPeriod, rankGifters, sessionTotals, wibDate } from "@/common/utils/giftPeriods";
 
 /**
@@ -53,9 +54,11 @@ async function createPeriod(streamerUuid: string, now: number): Promise<number> 
   ]);
 }
 
-async function latestPeriodRow(streamerUuid: string): Promise<{ id: number; day: string } | undefined> {
-  return get<{ id: number; day: string }>(
-    "SELECT id, day FROM gift_periods WHERE streamer_uuid = ? ORDER BY id DESC LIMIT 1",
+async function latestPeriodRow(
+  streamerUuid: string,
+): Promise<{ id: number; day: string; updated_at: number } | undefined> {
+  return get<{ id: number; day: string; updated_at: number }>(
+    "SELECT id, day, updated_at FROM gift_periods WHERE streamer_uuid = ? ORDER BY id DESC LIMIT 1",
     [streamerUuid],
   );
 }
@@ -91,6 +94,25 @@ async function ensureSession(slug: string, streamerUuid: string, now: number): P
   );
 }
 
+/**
+ * Gifts in the last seconds before midnight are often missed by polling (IDN's
+ * ranking lags, then resets). The chat ledger saw them, so raise the closed
+ * period's per-gifter totals to the chat's. MAX only, never add: idempotent and
+ * retry-safe, and chat can't inflate a total the poll already has.
+ */
+async function reconcilePeriodWithChat(streamerUuid: string, periodId: number, day: string): Promise<void> {
+  for (const g of await chatDailyTotals(streamerUuid, day)) {
+    await run(
+      `INSERT INTO gift_period_totals (period_id, gifter_uuid, gifter_name, total_gold, total_point)
+       VALUES (?, ?, ?, ?, ?)
+       ON CONFLICT (period_id, gifter_uuid) DO UPDATE SET
+         total_gold = MAX(total_gold, excluded.total_gold),
+         total_point = MAX(total_point, excluded.total_point)`,
+      [periodId, g.uuid, g.name, g.gold, g.point],
+    );
+  }
+}
+
 async function applySnapshot(streamerUuid: string, gifters: GifterTotal[], slug?: string): Promise<void> {
   const now = Date.now();
   // The session must be anchored BEFORE this snapshot lands, so gifts from an
@@ -105,7 +127,9 @@ async function applySnapshot(streamerUuid: string, gifters: GifterTotal[], slug?
   } else {
     periodId = latest.id;
     const prev = new Map((await periodTotals(periodId)).map((g) => [g.uuid, g.gold]));
-    if (isNewPeriod(prev, gifters, latest.day, wibDate(now))) {
+    if (isNewPeriod(prev, gifters, latest.day, latest.updated_at, now)) {
+      // Before opening the new period, so a failed retry redoes it (idempotent).
+      await reconcilePeriodWithChat(streamerUuid, latest.id, latest.day);
       periodId = await createPeriod(streamerUuid, now);
       console.log(`[gifts] ${streamerUuid}: IDN ranking reset, new period ${periodId} (${wibDate(now)})`);
     }
