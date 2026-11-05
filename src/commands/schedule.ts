@@ -21,6 +21,7 @@ export interface Member {
   height: string;
   generation: string;
   idn_username?: string;
+  team?: string;
 }
 
 export enum Group {

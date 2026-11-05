@@ -35,9 +35,10 @@
     "room_id": 509985,
     "sr_exists": true,
     "is_graduate": false,
-    "height": "161cm",
+    "height": "164cm",
     "generation": "Gen 12",
-    "idn_username": "jkt48_aralie"
+    "idn_username": "jkt48_aralie",
+    "team": "Passion"
   },
   {
     "_id": "65ce68ed1dd7aa2c8c0ca76e",
@@ -77,7 +78,8 @@
     "sr_exists": true,
     "is_graduate": false,
     "generation": "Gen 12",
-    "idn_username": "jkt48_delynn"
+    "idn_username": "jkt48_delynn",
+    "team": "Dream"
   },
   {
     "name": "Afera Thalia",
@@ -97,7 +99,8 @@
     ],
     "is_graduate": false,
     "generation": "Trainee",
-    "idn_username": "jkt48_fera"
+    "idn_username": "jkt48_fera",
+    "team": "Trainee"
   },
   {
     "name": "Astrella Virgiananda",
@@ -106,18 +109,31 @@
     "url": "virgi",
     "video_perkenalan": "AuqvZO-vvKw",
     "group": "jkt48",
-    "height": "162cm",
+    "height": "164cm",
     "jikosokai": "Suka berekspresi melalui kreasi, Tara!!! Aku Virgi",
     "description": "📌 Name: Astrella Virgiananda\r\n🎂 Birthday: 6 Agustus 2010\r\n🩸 Blood type: AB\r\n🏹 Zodiac signs: Leo",
     "is_graduate": false,
     "generation": "Gen 13",
     "socials": [
       {
+        "title": "Twitter",
+        "url": "https://twitter.com/A_VirgiJKT48"
+      },
+      {
+        "title": "Instagram",
+        "url": "https://www.instagram.com/virgi.jkt48/"
+      },
+      {
+        "title": "TikTok",
+        "url": "https://www.tiktok.com/@jkt48.virgi/"
+      },
+      {
         "title": "IDN",
         "url": "https://click.idn.media/VKUf?af_dp=idnapp://profile/147e83c8-f3ac-4680-9141-2f518b4b7810&af_web_dp=https://www.idn.app/jkt48_virgi&c=web-android&deep_link_value=profile/147e83c8-f3ac-4680-9141-2f518b4b7810&pid=idnapp"
       }
     ],
-    "idn_username": "jkt48_virgi"
+    "idn_username": "jkt48_virgi",
+    "team": "Trainee"
   },
   {
     "name": "Aulia Riza",
@@ -129,7 +145,7 @@
     "height": "166cm",
     "jikosokai": "Serigala tangguh di bawah sinar purnama panggil aku Awuiaaaa",
     "description": "📌 Name: Aulia Riza\r\n🎂 Birthday: 14 Juli 2007\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Cancer",
-    "is_graduate": false,
+    "is_graduate": true,
     "generation": "Gen 13",
     "socials": [
       {
@@ -146,18 +162,31 @@
     "url": "rilly",
     "video_perkenalan": "YePfwLPK7_Q",
     "group": "jkt48",
-    "height": "164cm",
+    "height": "166cm",
     "jikosokai": "Bagaikan harmoni indah yang berirama di benakmu, Hai aku Rilly",
     "description": "📌 Name: Bong Aprilli\r\n🎂 Birthday: 1 April 2010\r\n🩸 Blood type: A\r\n🏹 Zodiac signs: Aries",
     "is_graduate": false,
     "generation": "Gen 13",
     "socials": [
       {
+        "title": "Twitter",
+        "url": "https://twitter.com/Rilly_JKT48"
+      },
+      {
+        "title": "Instagram",
+        "url": "https://www.instagram.com/rilly.jkt48_/"
+      },
+      {
+        "title": "TikTok",
+        "url": "https://www.tiktok.com/@jkt48.rilly/"
+      },
+      {
         "title": "IDN",
         "url": "https://click.idn.media/VKUf?af_dp=idnapp://profile/e9170998-f026-4186-bbc5-a17a3b5b2af1&af_web_dp=https://www.idn.app/jkt48_rilly&c=web-android&deep_link_value=profile/e9170998-f026-4186-bbc5-a17a3b5b2af1&pid=idnapp"
       }
     ],
-    "idn_username": "jkt48_rilly"
+    "idn_username": "jkt48_rilly",
+    "team": "Trainee"
   },
   {
     "name": "Carissa Dini",
@@ -177,7 +206,8 @@
     ],
     "is_graduate": false,
     "generation": "Trainee",
-    "idn_username": "jkt48_carissa"
+    "idn_username": "jkt48_carissa",
+    "team": "Trainee"
   },
   {
     "name": "Christabella Bonita",
@@ -197,7 +227,8 @@
     ],
     "is_graduate": false,
     "generation": "Trainee",
-    "idn_username": "jkt48_bella"
+    "idn_username": "jkt48_bella",
+    "team": "Trainee"
   },
   {
     "name": "Fahira Putri",
@@ -217,7 +248,8 @@
     ],
     "is_graduate": false,
     "generation": "Trainee",
-    "idn_username": "jkt48_fahira"
+    "idn_username": "jkt48_fahira",
+    "team": "Trainee"
   },
   {
     "name": "Fatimah Azzahra",
@@ -237,7 +269,8 @@
     ],
     "is_graduate": false,
     "generation": "Trainee",
-    "idn_username": "jkt48_rara"
+    "idn_username": "jkt48_rara",
+    "team": "Trainee"
   },
   {
     "name": "Hagia Sopia",
@@ -246,18 +279,31 @@
     "url": "giaa",
     "group": "jkt48",
     "video_perkenalan": "JseZJJm9Ns8",
-    "height": "166cm",
+    "height": "165cm",
     "jikosokai": "Dengan semangat dan kerja kerasku, aku akan membuat kalian baha - giaa, Halo panggil aku Giaa",
     "description": "📌 Name: Hagia Sopia\r\n🎂 Birthday: 1 Juli 2008\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Cancer",
     "is_graduate": false,
     "generation": "Gen 13",
     "socials": [
       {
+        "title": "Twitter",
+        "url": "https://twitter.com/Giaa_JKT48"
+      },
+      {
+        "title": "Instagram",
+        "url": "https://www.instagram.com/giaa.jkt48/"
+      },
+      {
+        "title": "TikTok",
+        "url": "https://www.tiktok.com/@giaa.jkt48/"
+      },
+      {
         "title": "IDN",
         "url": "https://click.idn.media/VKUf?af_dp=idnapp://profile/3c97d6a6-6fc2-4e2b-b7f6-e94ebe9c3e93&af_web_dp=https://www.idn.app/jkt48_giaa&c=web-android&deep_link_value=profile/3c97d6a6-6fc2-4e2b-b7f6-e94ebe9c3e93&pid=idnapp"
       }
     ],
-    "idn_username": "jkt48_giaa"
+    "idn_username": "jkt48_giaa",
+    "team": "Trainee"
   },
   {
     "name": "Heidi Suyangga",
@@ -277,7 +323,8 @@
     ],
     "is_graduate": false,
     "generation": "Trainee",
-    "idn_username": "jkt48_heidi"
+    "idn_username": "jkt48_heidi",
+    "team": "Trainee"
   },
   {
     "name": "Humaira Ramadhani",
@@ -286,18 +333,31 @@
     "url": "maira",
     "group": "jkt48",
     "video_perkenalan": "TnBcNI1RAE0",
-    "height": "156cm",
+    "height": "159cm",
     "jikosokai": "Penceria yang membuatmu tertawa dengan tingkahku, Halo semuanya aku Maira",
     "description": "📌 Name: Humaira Ramadhani\r\n🎂 Birthday: 13 Agustus 2011\r\n🩸 Blood type: A\r\n🏹 Zodiac signs: Leo",
     "is_graduate": false,
     "generation": "Gen 13",
     "socials": [
       {
+        "title": "Twitter",
+        "url": "https://twitter.com/Maira_JKT48"
+      },
+      {
+        "title": "Instagram",
+        "url": "https://www.instagram.com/maira.jkt48/"
+      },
+      {
+        "title": "TikTok",
+        "url": "https://www.tiktok.com/@jkt48.maira/"
+      },
+      {
         "title": "IDN",
         "url": "https://click.idn.media/VKUf?af_dp=idnapp://profile/7599c984-c466-4962-8c5b-73c1d33d59d9&af_web_dp=https://www.idn.app/jkt48_maira&c=web-android&deep_link_value=profile/7599c984-c466-4962-8c5b-73c1d33d59d9&pid=idnapp"
       }
     ],
-    "idn_username": "jkt48_maira"
+    "idn_username": "jkt48_maira",
+    "team": "Trainee"
   },
   {
     "name": "Jacqueline Immanuela",
@@ -307,17 +367,30 @@
     "group": "jkt48",
     "video_perkenalan": "9KkeHXWg5O4",
     "jikosokai": "Sesejuk dan sedingin mint, perkenalkan aku Ekin",
-    "height": "160cm",
+    "height": "161cm",
     "description": "📌 Name: Jacqueline Immanuela\r\n🎂 Birthday: 9 Juli 2009\r\n🩸 Blood type: B\r\n🏹 Zodiac signs: Cancer",
     "is_graduate": false,
     "generation": "Gen 13",
     "socials": [
       {
+        "title": "Twitter",
+        "url": "https://twitter.com/Ekin_JKT48"
+      },
+      {
+        "title": "Instagram",
+        "url": "https://www.instagram.com/ekin.jkt48/"
+      },
+      {
+        "title": "TikTok",
+        "url": "https://www.tiktok.com/@jkt48.ekin/"
+      },
+      {
         "title": "IDN",
         "url": "https://click.idn.media/VKUf?af_dp=idnapp://profile/85f369d7-6525-41c0-94b8-9a56686713eb&af_web_dp=https://www.idn.app/jkt48_ekin&c=web-android&deep_link_value=profile/85f369d7-6525-41c0-94b8-9a56686713eb&pid=idnapp"
       }
     ],
-    "idn_username": "jkt48_ekin"
+    "idn_username": "jkt48_ekin",
+    "team": "Trainee"
   },
   {
     "name": "Jemima Evodie",
@@ -325,7 +398,7 @@
     "img_alt": "https://res.cloudinary.com/dlx2zm7ha/image/upload/v1733058623/pqkdobva67sr6x8xxszp.jpg",
     "url": "ekin",
     "group": "jkt48",
-    "height": "160cm",
+    "height": "165cm",
     "jikosokai": "Ci Luk Ba!!!, Merpati yang akan membawa kejutan disetiap penampilan ku, Halo aku Jemima",
     "video_perkenalan": "9rH9Z2mrXaA",
     "description": "📌 Name: Jemima Evodie\r\n🎂 Birthday: 9 November 2009\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Scorpio",
@@ -333,11 +406,24 @@
     "generation": "Gen 13",
     "socials": [
       {
+        "title": "Twitter",
+        "url": "https://twitter.com/JE_JemimaJKT48"
+      },
+      {
+        "title": "Instagram",
+        "url": "https://www.instagram.com/jemima.jkt48/"
+      },
+      {
+        "title": "TikTok",
+        "url": "https://www.tiktok.com/@jkt48.jemima/"
+      },
+      {
         "title": "IDN",
         "url": "https://click.idn.media/VKUf?af_dp=idnapp://profile/fe70498c-cb4c-4f98-9ad8-e0bd3fe2c453&af_web_dp=https://www.idn.app/jkt48_jemima&c=web-android&deep_link_value=profile/fe70498c-cb4c-4f98-9ad8-e0bd3fe2c453&pid=idnapp"
       }
     ],
-    "idn_username": "jkt48_jemima"
+    "idn_username": "jkt48_jemima",
+    "team": "Trainee"
   },
   {
     "name": "Maxine Faye",
@@ -348,7 +434,7 @@
     "group": "jkt48",
     "height": "164cm",
     "jikosokai": "",
-    "description": "📌 Name: Maxine Faye\r\n🎂 Birthday: 2 Desember 2011\r\n🩸 Blood type: B\r\n🏹 Zodiac signs: Sagittarius",
+    "description": "📌 Name: Maxine Faye\r\n🎂 Birthday: 2 Desember 2011\r\n🩸 Blood type: B\r\n🏹 Zodiac signs: Sagitarius",
     "socials": [
       {
         "title": "IDN",
@@ -357,7 +443,8 @@
     ],
     "is_graduate": false,
     "generation": "Trainee",
-    "idn_username": "jkt48_maxine"
+    "idn_username": "jkt48_maxine",
+    "team": "Trainee"
   },
   {
     "name": "Mikaela Kusjanto",
@@ -373,11 +460,24 @@
     "generation": "Gen 13",
     "socials": [
       {
+        "title": "Twitter",
+        "url": "https://twitter.com/M_MikaelaJKT48"
+      },
+      {
+        "title": "Instagram",
+        "url": "https://www.instagram.com/mikaela.jkt48/"
+      },
+      {
+        "title": "TikTok",
+        "url": "https://www.tiktok.com/@jkt48.mikaela/"
+      },
+      {
         "title": "IDN",
         "url": "https://click.idn.media/VKUf?af_dp=idnapp://profile/a557ba58-12d8-4260-bd50-9e5252ac71ef&af_web_dp=https://www.idn.app/jkt48_mikaela&c=web-android&deep_link_value=profile/a557ba58-12d8-4260-bd50-9e5252ac71ef&pid=idnapp"
       }
     ],
-    "idn_username": "jkt48_mikaela"
+    "idn_username": "jkt48_mikaela",
+    "team": "Trainee"
   },
   {
     "name": "Nur Intan",
@@ -393,11 +493,24 @@
     "generation": "Gen 13",
     "socials": [
       {
+        "title": "Twitter",
+        "url": "https://twitter.com/N_IntanJKT48"
+      },
+      {
+        "title": "Instagram",
+        "url": "https://www.instagram.com/intan.jkt48/"
+      },
+      {
+        "title": "TikTok",
+        "url": "https://www.tiktok.com/@jkt48.intan/"
+      },
+      {
         "title": "IDN",
         "url": "https://click.idn.media/VKUf?af_dp=idnapp://profile/cbc0bbe1-d6ea-4646-bfcf-24b3a642fa21&af_web_dp=https://www.idn.app/jkt48_intan&c=web-android&deep_link_value=profile/cbc0bbe1-d6ea-4646-bfcf-24b3a642fa21&pid=idnapp"
       }
     ],
-    "idn_username": "jkt48_intan"
+    "idn_username": "jkt48_intan",
+    "team": "Trainee"
   },
   {
     "_id": "65ce68ec1dd7aa2c8c0ca738",
@@ -435,7 +548,7 @@
     ],
     "room_id": 461451,
     "sr_exists": true,
-    "is_graduate": false,
+    "is_graduate": true,
     "generation": "Gen 11",
     "idn_username": "jkt48_alya"
   },
@@ -475,7 +588,7 @@
     ],
     "room_id": 400710,
     "sr_exists": true,
-    "is_graduate": false,
+    "is_graduate": true,
     "generation": "Gen 10",
     "idn_username": "jkt48_amanda"
   },
@@ -489,7 +602,7 @@
     "description": "📌 Name: Angelina Christy\r\n🎂 Birthday: 5 December 2005\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Sagitarius\r\n📝 Hobby: Dancing",
     "group": "jkt48",
     "video_perkenalan": "syK_VjWJjeY",
-    "height": "163cm",
+    "height": "166cm",
     "jikosokai": "Peduli dan berbaik hati, siapakah dia? Chris.. (ty!)",
     "socials": [
       {
@@ -517,7 +630,8 @@
     "sr_exists": true,
     "is_graduate": false,
     "generation": "Gen 7",
-    "idn_username": "jkt48_christy"
+    "idn_username": "jkt48_christy",
+    "team": "Passion"
   },
   {
     "_id": "65ce68ec1dd7aa2c8c0ca73a",
@@ -528,7 +642,7 @@
     "url": "anindya",
     "description": "📌 Name: Anindya Ramadhani\r\n🎂 Birthday: 18 October 2005\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Libra\r\n📝 Hobby: Cooking, Baking, Art",
     "group": "jkt48",
-    "height": "154cm",
+    "height": "153cm",
     "jikosokai": "Si mungil hadir semanis mangga, hai aku Anindya!",
     "socials": [
       {
@@ -557,7 +671,8 @@
     "is_graduate": false,
     "generation": "Gen 11",
     "video_perkenalan": "q0Xiy-HhLEU",
-    "idn_username": "jkt48_anindya"
+    "idn_username": "jkt48_anindya",
+    "team": "Love"
   },
   {
     "_id": "65ce68e61dd7aa2c8c0ca5d4",
@@ -568,7 +683,7 @@
     "url": "lia",
     "description": "📌 Name: Aurellia\r\n🎂 Birthday: 29 Oktober 2002\r\n🩸 Blood type: O\r\n🏹 Zodiac signs:  Scorpio\r\n📝 Hobby: Dance, Listening to Music",
     "group": "jkt48",
-    "height": "155cm",
+    "height": "157cm",
     "jikosokai": "Si social butterfly yang energik dan periang!",
     "socials": [
       {
@@ -597,7 +712,8 @@
     "is_graduate": false,
     "generation": "Gen 10",
     "video_perkenalan": "iyv-2LfZ_yw",
-    "idn_username": "jkt48_lia"
+    "idn_username": "jkt48_lia",
+    "team": "Love"
   },
   {
     "_id": "65ce68ed1dd7aa2c8c0ca772",
@@ -606,9 +722,9 @@
     "img": "https://static.showroom-live.com/image/room/cover/bbf5793ce9431e26532a55331376e1f2428e8bc1365960f1468602383361ad68_m.jpeg?v=1712491363",
     "img_alt": "https://res.cloudinary.com/haymzm4wp/image/upload/v1704955233/wlho5exk4shmdydlacoe.jpg",
     "url": "lana",
-    "description": "📌 Name: Aurhel Alana\r\n🎂 Birthday: 14 September 2006\r\n🩸 Blood type: -\r\n🏹 Zodiac signs: Virgo",
+    "description": "📌 Name: Aurhel Alana\r\n🎂 Birthday: 14 September 2006\r\n🩸 Blood type: A\r\n🏹 Zodiac signs: Virgo",
     "group": "jkt48",
-    "height": "163cm",
+    "height": "162cm",
     "jikosokai": "Dengan kekuatan bulan aku akan menyihirmu dengan pesonaku!",
     "socials": [
       {
@@ -637,7 +753,8 @@
     "is_graduate": false,
     "generation": "Gen 12",
     "video_perkenalan": "R3HPWXgIwks",
-    "idn_username": "jkt48_lana"
+    "idn_username": "jkt48_lana",
+    "team": "Love"
   },
   {
     "_id": "65ce68ed1dd7aa2c8c0ca774",
@@ -648,7 +765,7 @@
     "url": "erine",
     "description": "📌 Name: Catherina Vallencia\r\n🎂 Birthday: 21 Agustus 2007\r\n🩸 Blood type: B\r\n🏹 Zodiac signs: Leo",
     "group": "jkt48",
-    "height": "163cm",
+    "height": "162cm",
     "jikosokai": "Hadir dengan seribu kejutan..Checkmate! Siap memenangkan hatimu!",
     "socials": [
       {
@@ -677,7 +794,8 @@
     "is_graduate": false,
     "generation": "Gen 12",
     "video_perkenalan": "Obxn7knXq38",
-    "idn_username": "jkt48_erine"
+    "idn_username": "jkt48_erine",
+    "team": "Passion"
   },
   {
     "_id": "65ce68ec1dd7aa2c8c0ca73e",
@@ -714,7 +832,7 @@
     ],
     "room_id": 461454,
     "sr_exists": true,
-    "is_graduate": false,
+    "is_graduate": true,
     "generation": "Gen 11",
     "video_perkenalan": "Azwe5GrJbJw",
     "idn_username": "jkt48_cathy"
@@ -728,7 +846,7 @@
     "url": "elin",
     "description": "📌 Name: Celline Thefani\r\n🎂 Birthday: 9 April 2007\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Aries\r\n📝 Hobby: Badminton, Basketball, Mixing and matching outfits, Thrifting,  Watching Korean or Chinese TV series",
     "group": "jkt48",
-    "height": "163cm",
+    "height": "164cm",
     "jikosokai": "Semanis permen kapas dan seindah bunga lavender! Hollaa perkenalkan nama aku Elin.",
     "socials": [
       {
@@ -757,7 +875,8 @@
     "is_graduate": false,
     "generation": "Gen 11",
     "video_perkenalan": "6zkHlOl2jpg",
-    "idn_username": "jkt48_elin"
+    "idn_username": "jkt48_elin",
+    "team": "Love"
   },
   {
     "_id": "65ce68ec1dd7aa2c8c0ca742",
@@ -794,7 +913,7 @@
     ],
     "room_id": 461458,
     "sr_exists": true,
-    "is_graduate": false,
+    "is_graduate": true,
     "generation": "Gen 11",
     "video_perkenalan": "fdP30ZtwQSE",
     "idn_username": "jkt48_chelsea"
@@ -808,7 +927,7 @@
     "url": "oniel",
     "description": "📌 Name: Cornelia Vanisa\r\n🎂 Birthday:26 July 2002\r\n🩸 Blood type:O \r\n🏹 Zodiac signs: Leo  \r\n📝 Hobby: Playing the guitar / ukulele, Listening music, Lettering",
     "group": "jkt48",
-    "height": "162cm",
+    "height": "165cm",
     "jikosokai": "Seperti teka-teki, kalian akan selalu penasaran denganku! Aku Oniel!",
     "socials": [
       {
@@ -837,7 +956,8 @@
     "is_graduate": false,
     "generation": "Gen 8",
     "video_perkenalan": "QBXhvMSbx6E",
-    "idn_username": "jkt48_oniel"
+    "idn_username": "jkt48_oniel",
+    "team": "Passion"
   },
   {
     "_id": "65ce68ec1dd7aa2c8c0ca744",
@@ -846,9 +966,9 @@
     "img": "https://static.showroom-live.com/image/room/cover/e3e88b5c96d4af6c2bd0e951809d808214a6bb8837903c1d8a83fa87ad1ea080_m.jpeg?v=1683727584",
     "img_alt": "https://res.cloudinary.com/dlx2zm7ha/image/upload/v1730439564/oabilees7i7nppzqgkfo.jpg",
     "url": "cynthia",
-    "description": "📌 ame: Cynthia Yaputera\r\n🎂 Birthday: 22 November 2003\r\n🩸 Blood type: A\r\n🏹 Zodiac signs: Sagittarius\r\n📝 Hobby: Sleeping, make up, online shopping",
+    "description": "📌 ame: Cynthia Yaputera\r\n🎂 Birthday: 22 November 2003\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Sagitarius\r\n📝 Hobby: Sleeping, make up, online shopping",
     "group": "jkt48",
-    "height": "158cm",
+    "height": "160cm",
     "jikosokai": "Semangatku terus menerus meluap POP POP! Halo aku Cynthia!",
     "socials": [
       {
@@ -877,7 +997,8 @@
     "is_graduate": false,
     "generation": "Gen 11",
     "video_perkenalan": "ORECz7NyioE",
-    "idn_username": "jkt48_cynthia"
+    "idn_username": "jkt48_cynthia",
+    "team": "Love"
   },
   {
     "_id": "65ce68ec1dd7aa2c8c0ca746",
@@ -886,9 +1007,9 @@
     "img": "https://static.showroom-live.com/image/room/cover/002771d7d8969132b8749564920a354426fad0c56857e3818de960035c560ed7_m.jpeg?v=1683720314",
     "img_alt": "https://res.cloudinary.com/dlx2zm7ha/image/upload/v1730439563/goewonaoaxysq2lzssdp.jpg",
     "url": "danella",
-    "description": "📌 Name: Dena Natalia\r\n🎂 Birthday: 16 December 2005\r\n🩸 Blood type: O\r\nZodiac signs: Sagittarius\r\n📝 Hobby: Dancing, Swimming",
+    "description": "📌 Name: Dena Natalia\r\n🎂 Birthday: 16 December 2005\r\n🩸 Blood type: O\r\nZodiac signs: Sagitarius\r\n📝 Hobby: Dancing, Swimming",
     "group": "jkt48",
-    "height": "162cm",
+    "height": "163cm",
     "jikosokai": "Si penari yang akan menarikmu ke duniaku. Hai, aku Danella!",
     "socials": [
       {
@@ -917,7 +1038,8 @@
     "is_graduate": false,
     "generation": "Gen 11",
     "video_perkenalan": "TF1eFUCWLIg",
-    "idn_username": "jkt48_danella"
+    "idn_username": "jkt48_danella",
+    "team": "Passion"
   },
   {
     "_id": "65ce68ec1dd7aa2c8c0ca748",
@@ -926,7 +1048,7 @@
     "img": "https://static.showroom-live.com/image/room/cover/a5054230e2eeeae789ccdf134345e4f3cf05801d689d9ec57397d34eae090343_m.jpeg?v=1683720323",
     "img_alt": "https://res.cloudinary.com/dlx2zm7ha/image/upload/v1730439565/eoi70dxelviq60ysdnkd.jpg",
     "url": "daisy",
-    "description": "📌 Name: Desy Natalia\r\n🎂 Birthday: 16 December 2005\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Sagittarius\r\n📝 Hobby: Dancing, Swimming",
+    "description": "📌 Name: Desy Natalia\r\n🎂 Birthday: 16 December 2005\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Sagitarius\r\n📝 Hobby: Dancing, Swimming",
     "group": "jkt48",
     "height": "165cm",
     "jikosokai": "Seperti bunga Daisy, aku akan memancarkan kesegaran dan kebahagiaan! Hai hai aku Daisy!",
@@ -957,7 +1079,8 @@
     "is_graduate": false,
     "generation": "Gen 11",
     "video_perkenalan": "p250QlcRi28",
-    "idn_username": "jkt48_daisy"
+    "idn_username": "jkt48_daisy",
+    "team": "Passion"
   },
   {
     "_id": "65ce68e71dd7aa2c8c0ca614",
@@ -968,7 +1091,7 @@
     "url": "olla",
     "description": "📌 Name: Febriola Sinambela\r\n🎂 Birthday: 26 February 2005\r\n🩸 Blood type: B\r\n🏹 Zodiac signs: Pisces \r\n📝 Hobby:Dance",
     "group": "jkt48",
-    "height": "154cm",
+    "height": "157cm",
     "jikosokai": "Dengan keajaibanku, aku akan membuat kalian selalu tertawa. Hallo, aku Olla si mechanic girl!",
     "socials": [
       {
@@ -997,7 +1120,8 @@
     "video_perkenalan": "FkEcqc2elbk",
     "is_graduate": false,
     "generation": "Gen 7",
-    "idn_username": "jkt48_olla"
+    "idn_username": "jkt48_olla",
+    "team": "Dream"
   },
   {
     "_id": "65ce68e81dd7aa2c8c0ca666",
@@ -1008,7 +1132,7 @@
     "url": "feni",
     "description": "📌 Name: Feni Fitriyanti\r\n🎂 Birthday: 16 January 1999\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Capricorn  \r\n📝 Hobby: Watching movies, Cooking, Dancing, Fashion",
     "group": "jkt48",
-    "height": "162cm",
+    "height": "163cm",
     "jikosokai": "Matahari yang indah, yang akan memberikan kehangatan di setiap harinya. Panggil aku Feni.\r\n(I am a beautiful sun that warms you everyday. Call me Feni.)",
     "socials": [
       {
@@ -1037,7 +1161,8 @@
     "is_graduate": false,
     "video_perkenalan": "ROwniZ7gJMQ",
     "generation": "Gen 3",
-    "idn_username": "jkt48_feni"
+    "idn_username": "jkt48_feni",
+    "team": "Passion"
   },
   {
     "_id": "65ce68e91dd7aa2c8c0ca678",
@@ -1048,7 +1173,7 @@
     "url": "fiony",
     "description": "📌 Name: Fiony Alveria\r\n🎂 Birthday: 4 February 2002\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Aquarius \r\n📝 Hobby: Dance, Drawing, Listening Music",
     "group": "jkt48",
-    "height": "158cm",
+    "height": "164cm",
     "jikosokai": "Seperti simfoni yang menenangkan hati. Hai aku Fiony!",
     "socials": [
       {
@@ -1077,7 +1202,8 @@
     "is_graduate": false,
     "generation": "Gen 8",
     "video_perkenalan": "SjNYQIw1TOA",
-    "idn_username": "jkt48_fiony"
+    "idn_username": "jkt48_fiony",
+    "team": "Love"
   },
   {
     "_id": "65ce68e61dd7aa2c8c0ca5ea",
@@ -1114,7 +1240,7 @@
     ],
     "room_id": 318224,
     "sr_exists": true,
-    "is_graduate": false,
+    "is_graduate": true,
     "generation": "Gen 8",
     "video_perkenalan": "IC21I61BzRU",
     "idn_username": "jkt48_flora"
@@ -1128,7 +1254,7 @@
     "url": "freya",
     "description": "📌 Name: Freya Jayawardana\r\n🎂 Birthday:13 February 2006\r\n🩸 Blood type: B  \r\n🏹 Zodiac signs: Aquarius\r\n📝 Hobby:Dance, Singing, Reading novel",
     "group": "jkt48",
-    "height": "154cm",
+    "height": "161cm",
     "jikosokai": "Gadis koleris yang suka berimajinasi, terangi harimu dengan senyuman karamelku. Halo, aku Freya!",
     "socials": [
       {
@@ -1157,7 +1283,8 @@
     "is_graduate": false,
     "video_perkenalan": "kdLuPyPOv1A",
     "generation": "Gen 7",
-    "idn_username": "jkt48_freya"
+    "idn_username": "jkt48_freya",
+    "team": "Dream"
   },
   {
     "_id": "65ce68ed1dd7aa2c8c0ca776",
@@ -1168,7 +1295,7 @@
     "url": "fritzy",
     "description": "📌 Name: Fritzy Rosmerian\r\n🎂 Birthday: 28 July 2008\r\n🩸 Blood type: A\r\n🏹 Zodiac signs: Leo",
     "group": "jkt48",
-    "height": "157cm",
+    "height": "155cm",
     "jikosokai": "Abracadabra, si pesulap yang siap membuat hatimu terpikat!",
     "socials": [
       {
@@ -1197,7 +1324,8 @@
     "is_graduate": false,
     "generation": "Gen 12",
     "video_perkenalan": "jDHfbFuG3b4",
-    "idn_username": "jkt48_fritzy"
+    "idn_username": "jkt48_fritzy",
+    "team": "Love"
   },
   {
     "_id": "65ce68e61dd7aa2c8c0ca5b4",
@@ -1206,9 +1334,9 @@
     "img": "https://static.showroom-live.com/image/room/cover/33b9a09551fb56e388c636720e88c310983d759c7be62230d59aa4a84303e1dc_m.jpeg?v=1685542674",
     "img_alt": "https://res.cloudinary.com/haymzm4wp/image/upload/v1709325923/ky20hyeygc5rqv3ywpbw.jpg",
     "url": "ella",
-    "description": "📌 Name: Gabriela Abigail Mewengkang\r\n🎂 Birthday: 7 August 2006\r\n🩸 Blood type: B+\r\n🏹 Zodiac signs: Leo\r\n📝 Hobby: Dance, Listening to Music, Drawing",
+    "description": "📌 Name: Gabriela Abigail Mewengkang\r\n🎂 Birthday: 7 August 2006\r\n🩸 Blood type: B\r\n🏹 Zodiac signs: Leo\r\n📝 Hobby: Dance, Listening to Music, Drawing",
     "group": "jkt48",
-    "height": "160cm",
+    "height": "161cm",
     "jikosokai": "Ohayo! Konnichiwa! Oyasumi! Aku ingin ada di setiap waktumu",
     "socials": [
       {
@@ -1237,7 +1365,8 @@
     "video_perkenalan": "v2iMGnJjdUA",
     "is_graduate": false,
     "generation": "Gen 10",
-    "idn_username": "jkt48_ella"
+    "idn_username": "jkt48_ella",
+    "team": "Dream"
   },
   {
     "_id": "65ce68ec1dd7aa2c8c0ca74a",
@@ -1274,7 +1403,7 @@
     ],
     "room_id": 461476,
     "sr_exists": true,
-    "is_graduate": false,
+    "is_graduate": true,
     "generation": "Gen 11",
     "video_perkenalan": "CY4wiewZ1dM",
     "idn_username": "jkt48_Gendis"
@@ -1317,7 +1446,8 @@
     "is_graduate": false,
     "generation": "Gen 6",
     "video_perkenalan": "d1Hr6J22FWk",
-    "idn_username": "jkt48_gita"
+    "idn_username": "jkt48_gita",
+    "team": "Dream"
   },
   {
     "_id": "65ce68ec1dd7aa2c8c0ca74c",
@@ -1328,7 +1458,7 @@
     "url": "gracie",
     "description": "📌 Name: Grace Octaviani\r\n🎂 Birthday: 18 October 2007\r\n🩸 Blood type: B\r\n🏹 Zodiac signs: Libra\r\n📝 Hobby: Dance, Fashion Design, Drawing",
     "group": "jkt48",
-    "height": "165cm",
+    "height": "166cm",
     "jikosokai": "Manis seperti gulali, imut seperti kelinci! Halo, aku Gracie!",
     "socials": [
       {
@@ -1357,7 +1487,8 @@
     "is_graduate": false,
     "generation": "Gen 11",
     "video_perkenalan": "_IWCSQypw1U",
-    "idn_username": "jkt48_gracie"
+    "idn_username": "jkt48_gracie",
+    "team": "Love"
   },
   {
     "_id": "65ce68ec1dd7aa2c8c0ca74e",
@@ -1397,7 +1528,8 @@
     "is_graduate": false,
     "generation": "Gen 11",
     "video_perkenalan": "FVB78FBmBJE",
-    "idn_username": "jkt48_greesel"
+    "idn_username": "jkt48_greesel",
+    "team": "Dream"
   },
   {
     "_id": "65ce68e91dd7aa2c8c0ca69e",
@@ -1408,7 +1540,7 @@
     "url": "eli",
     "description": "📌 Name: Helisma Mauludzunia Putri Kurnia\r\n🎂 Birthday: 15 June 2000\r\n🩸 Blood type: A\r\n🏹 Zodiac signs: Gemini \r\n📝 Hobby: Reading, Coloring",
     "group": "jkt48",
-    "height": "165cm",
+    "height": "167cm",
     "jikosokai": "Pang! Pang! Si gadis penuh kejutan, penyebar virus kebahagiaan. Halo, aku Eli.",
     "socials": [
       {
@@ -1437,7 +1569,8 @@
     "is_graduate": false,
     "generation": "Gen 7",
     "video_perkenalan": "HyHGOCJJSNY",
-    "idn_username": "jkt48_eli"
+    "idn_username": "jkt48_eli",
+    "team": "Dream"
   },
   {
     "_id": "65ce68ed1dd7aa2c8c0ca778",
@@ -1448,7 +1581,7 @@
     "url": "lily",
     "description": "📌 Name: Hillary Abigail\r\n🎂 Birthday: 19 Oktober 2007\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Libra",
     "group": "jkt48",
-    "height": "160cm",
+    "height": "163cm",
     "jikosokai": "Papipapipu aku akan mengejutkanmu dengan kehebatan ku",
     "socials": [
       {
@@ -1477,7 +1610,8 @@
     "is_graduate": false,
     "generation": "Gen 12",
     "video_perkenalan": "AtQ5wXw9hZg",
-    "idn_username": "jkt48_lily"
+    "idn_username": "jkt48_lily",
+    "team": "Love"
   },
   {
     "_id": "65ce68eb1dd7aa2c8c0ca702",
@@ -1488,7 +1622,7 @@
     "url": "indah",
     "description": "📌 Name: Indah Cahya\r\n🎂 Birthday: 20 March 2001\r\n🩸 Blood type: A\r\n🏹 Zodiac signs: Pisces\r\n📝 Hobby: Cooking, Traveling, Watching film",
     "group": "jkt48",
-    "height": "165cm",
+    "height": "169cm",
     "jikosokai": "Tak banyak bicara bercerita lewat tulisan! Halo aku Indah!",
     "socials": [
       {
@@ -1517,7 +1651,8 @@
     "is_graduate": false,
     "generation": "Gen 9",
     "video_perkenalan": "yq-2IGkS-7M",
-    "idn_username": "jkt48_indah"
+    "idn_username": "jkt48_indah",
+    "team": "Love"
   },
   {
     "_id": "65ce68e81dd7aa2c8c0ca662",
@@ -1554,7 +1689,7 @@
     ],
     "room_id": 400716,
     "sr_exists": true,
-    "is_graduate": false,
+    "is_graduate": true,
     "generation": "Gen 10",
     "video_perkenalan": "1aierBjB9Io?si=1lB481D1xM5d1JXp",
     "idn_username": "jkt48_indira"
@@ -1568,7 +1703,7 @@
     "url": "trisha",
     "description": "📌 Name: Jazzlyn Trisha\r\n🎂 Birthday: 16 Februari 2011\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Aquarius",
     "group": "jkt48",
-    "height": "164cm",
+    "height": "161cm",
     "jikosokai": "Pelukis yang hadir di mimpi-mimpi indahmu. One, two, Tri..sha!",
     "socials": [
       {
@@ -1597,7 +1732,8 @@
     "is_graduate": false,
     "generation": "Gen 12",
     "video_perkenalan": "osOtCl1QfZw",
-    "idn_username": "jkt48_trisha"
+    "idn_username": "jkt48_trisha",
+    "team": "Love"
   },
   {
     "_id": "65ce68e61dd7aa2c8c0ca5e6",
@@ -1606,9 +1742,9 @@
     "img": "https://static.showroom-live.com/image/room/cover/293a846d52a0e9b04a50dafb6c0f80367256a0f3e2a7d9fdc5e92e572ad2415f_m.jpeg?v=1675091920",
     "img_alt": "https://res.cloudinary.com/haymzm4wp/image/upload/v1709325993/gi5zzp4imkzl3bip8yay.jpg",
     "url": "jessi",
-    "description": "📌 Name: Jessica Chandra\r\n🎂 Birthday:  23 September 2005\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Virgo \r\n📝 Hobby: Dance, Modelling, Make up",
+    "description": "📌 Name: Jessica Chandra\r\n🎂 Birthday:  23 September 2005\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Libra\r\n📝 Hobby: Dance, Modelling, Make up",
     "group": "jkt48",
-    "height": "163cm",
+    "height": "165cm",
     "jikosokai": "Suka menari dan akan berusaha menjadi sumber energimu. Aku Jessi.",
     "socials": [
       {
@@ -1637,7 +1773,8 @@
     "is_graduate": false,
     "generation": "Gen 7",
     "video_perkenalan": "pphK2eq7JFM",
-    "idn_username": "jkt48_jessi"
+    "idn_username": "jkt48_jessi",
+    "team": "Passion"
   },
   {
     "_id": "65ce68ea1dd7aa2c8c0ca6c4",
@@ -1677,7 +1814,8 @@
     "is_graduate": false,
     "generation": "Gen 10",
     "video_perkenalan": "fGRAOEz3rkY",
-    "idn_username": "jkt48_lyn"
+    "idn_username": "jkt48_lyn",
+    "team": "Dream"
   },
   {
     "_id": "65ce68e71dd7aa2c8c0ca62e",
@@ -1688,7 +1826,7 @@
     "url": "kathrina",
     "description": "📌 Name: Kathrina Irene\r\n🎂 Birthday: 26 July 2006\r\n🩸 Blood type: A\r\n🏹 Zodiac signs: Leo \r\n📝 Hobby: Drawing, Dance, Listening Music",
     "group": "jkt48",
-    "height": "163cm",
+    "height": "166cm",
     "jikosokai": "Never miss a chance to be a star! Halo aku Kathrina!",
     "socials": [
       {
@@ -1717,7 +1855,8 @@
     "is_graduate": false,
     "generation": "Gen 9",
     "video_perkenalan": "tKVdC4ylVO0",
-    "idn_username": "jkt48_kathrina"
+    "idn_username": "jkt48_kathrina",
+    "team": "Passion"
   },
   {
     "_id": "65ce68ed1dd7aa2c8c0ca77c",
@@ -1754,7 +1893,7 @@
     ],
     "room_id": 510014,
     "sr_exists": true,
-    "is_graduate": false,
+    "is_graduate": true,
     "generation": "Gen 12",
     "video_perkenalan": "wgE7QhulJkc",
     "idn_username": "jkt48_moreen"
@@ -1766,9 +1905,9 @@
     "img": "https://static.showroom-live.com/image/room/cover/b0dfb9a6b2a6d51b17d0149d72ac19992469d2734876ca2c1d55672ae91e0943_m.jpeg?v=1675091765",
     "img_alt": "https://res.cloudinary.com/haymzm4wp/image/upload/v1709326039/kj5y3eygbmq4agzkatty.jpg",
     "url": "lulu",
-    "description": "📌 Name: Lulu Salsabila\r\n🎂 Birthday: 23 October 2002\r\n🩸 Blood type: B \r\n🏹 Zodiac signs: Libra\r\n📝 Hobby:Dance, Playing the piano, Cooking",
+    "description": "📌 Name: Lulu Salsabila\r\n🎂 Birthday: 23 October 2002\r\n🩸 Blood type: B \r\n🏹 Zodiac signs: Scorpio\r\n📝 Hobby:Dance, Playing the piano, Cooking",
     "group": "jkt48",
-    "height": "157cm",
+    "height": "160cm",
     "jikosokai": "Seperti kerang ajaib yang indah, suara semangatku akan mengiringi hidupmu. Halo aku Lulu.",
     "socials": [
       {
@@ -1797,7 +1936,8 @@
     "is_graduate": false,
     "generation": "Gen 8",
     "video_perkenalan": "DdIvsJVYbOs",
-    "idn_username": "jkt48_lulu"
+    "idn_username": "jkt48_lulu",
+    "team": "Passion"
   },
   {
     "_id": "65ce68e91dd7aa2c8c0ca6a0",
@@ -1808,7 +1948,7 @@
     "url": "marsha",
     "description": "📌 Name: Marsha Lenathea\r\n🎂 Birthday:9 January 2006\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Capricorn \r\n📝 Hobby:Drawing, Listening music, Gaming",
     "group": "jkt48",
-    "height": "163cm",
+    "height": "165cm",
     "jikosokai": "Seperti pizza yang selalu dinanti-nantikan semua orang, selalu nantikan aku yah! Halo aku Marsha.",
     "socials": [
       {
@@ -1837,7 +1977,8 @@
     "is_graduate": false,
     "generation": "Gen 9",
     "video_perkenalan": "0vWnkbkpYUI",
-    "idn_username": "jkt48_marsha"
+    "idn_username": "jkt48_marsha",
+    "team": "Dream"
   },
   {
     "_id": "65ce68ec1dd7aa2c8c0ca752",
@@ -1846,9 +1987,9 @@
     "img": "https://static.showroom-live.com/image/room/cover/fc878be06fb484b4edcb8051e8456a93279b2395e711aada3d7547b1b78e3720_m.jpeg?v=1683720193",
     "img_alt": "https://res.cloudinary.com/dlx2zm7ha/image/upload/v1730439565/efztklnica9ylzgogh7j.jpg",
     "url": "michie",
-    "description": "📌 Name: Michelle Alexandra\r\n🎂 Birthday: 22 April 2009\r\n🩸 Blood type: A\r\n🏹 Zodiac signs: Taurus\r\n📝 Hobby: Singing, Thrifting, Ready, Watching Korean TV series",
+    "description": "📌 Name: Michelle Alexandra\r\n🎂 Birthday: 22 April 2009\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Taurus\r\n📝 Hobby: Singing, Thrifting, Ready, Watching Korean TV series",
     "group": "jkt48",
-    "height": "160cm",
+    "height": "162cm",
     "jikosokai": "Always your number 1, till infinity & beyond. Hello everyone, it's Michie!",
     "socials": [
       {
@@ -1877,7 +2018,8 @@
     "is_graduate": false,
     "generation": "Gen 11",
     "video_perkenalan": "wQuccIp6BNM",
-    "idn_username": "jkt48_michie"
+    "idn_username": "jkt48_michie",
+    "team": "Love"
   },
   {
     "_id": "65ce68ed1dd7aa2c8c0ca77e",
@@ -1888,7 +2030,7 @@
     "url": "levi",
     "description": "📌 Name: Michelle Levia\r\n🎂 Birthday: 24 Januari 2009\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Aquarius",
     "group": "jkt48",
-    "height": "168cm",
+    "height": "169cm",
     "jikosokai": "Are you ready? Jalani hari ini dengan menari bersama ku! Yuhu, Aku Levi!",
     "socials": [
       {
@@ -1917,7 +2059,8 @@
     "is_graduate": false,
     "generation": "Gen 12",
     "video_perkenalan": "keCoUnUnrCk",
-    "idn_username": "jkt48_levi"
+    "idn_username": "jkt48_levi",
+    "team": "Passion"
   },
   {
     "_id": "65ce68e51dd7aa2c8c0ca594",
@@ -1928,7 +2071,7 @@
     "url": "muthe",
     "description": "📌 Name: Mutiara Azzahra Umandana\r\n🎂 Birthday: 12 July 2004\r\n🩸 Blood type: B\r\n🏹 Zodiac signs: Cancer \r\n📝 Hobby: Dancing, Sewing",
     "group": "jkt48",
-    "height": "158cm",
+    "height": "165cm",
     "jikosokai": "Dengan kelincahanku, aku akan menari setiap hari! Panggil aku Mu Mu Mu… Muthe!",
     "socials": [
       {
@@ -1957,7 +2100,8 @@
     "is_graduate": false,
     "generation": "Gen 7",
     "video_perkenalan": "4eUzsiJcE6c",
-    "idn_username": "jkt48_muthe"
+    "idn_username": "jkt48_muthe",
+    "team": "Passion"
   },
   {
     "_id": "65ce68ed1dd7aa2c8c0ca780",
@@ -1968,7 +2112,7 @@
     "url": "nayla",
     "description": "📌 Name: Nayla Suji\r\n🎂 Birthday: 18 Juni 2007\r\n🩸 Blood type: AB\r\n🏹 Zodiac signs: Gemini",
     "group": "jkt48",
-    "height": "161cm",
+    "height": "163cm",
     "jikosokai": "Moshi..Mosh! Welcome Nayla Land! Halo semuanya, bakyu-n nama aku Nayla!",
     "socials": [
       {
@@ -1997,7 +2141,8 @@
     "is_graduate": false,
     "video_perkenalan": "dVPVlqVPgZ0",
     "generation": "Gen 12",
-    "idn_username": "jkt48_nayla"
+    "idn_username": "jkt48_nayla",
+    "team": "Love"
   },
   {
     "_id": "65ce68ed1dd7aa2c8c0ca782",
@@ -2006,9 +2151,9 @@
     "img": "https://static.showroom-live.com/image/room/cover/be9cc81c23250f46d686c9a750c5876b19f6c93234b2d3bdabc5c71ae9be4835_m.jpeg?v=1712491168",
     "img_alt": "https://res.cloudinary.com/haymzm4wp/image/upload/v1704955383/h6q2msbyiotfosnk4wfb.jpg",
     "url": "nachia",
-    "description": "📌 Name: Nina Tutachia\r\n🎂 Birthday: 16 October 2009\r\n🩸 Blood type: B\r\n🏹 Zodiac signs: Leo",
+    "description": "📌 Name: Nina Tutachia\r\n🎂 Birthday: 16 October 2009\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Libra",
     "group": "jkt48",
-    "height": "162cm",
+    "height": "164cm",
     "jikosokai": "Si Panda Unyu yang selalu ceria! Hai aku Nachia, bikin kamu bahagia!",
     "socials": [
       {
@@ -2037,7 +2182,8 @@
     "is_graduate": false,
     "generation": "Gen 12",
     "video_perkenalan": "uKHbpHf3Efc",
-    "idn_username": "jkt48_nachia"
+    "idn_username": "jkt48_nachia",
+    "team": "Dream"
   },
   {
     "_id": "65ce68ed1dd7aa2c8c0ca784",
@@ -2048,7 +2194,7 @@
     "url": "oline",
     "description": "📌 Name: Oline Manuel\r\n🎂 Birthday: 3 November 2007\r\n🩸 Blood type: B\r\n🏹 Zodiac signs: Scorpio",
     "group": "jkt48",
-    "height": "167cm",
+    "height": "169cm",
     "jikosokai": "Semangatku full terus! Gas gas gas Oline!",
     "socials": [
       {
@@ -2077,7 +2223,8 @@
     "is_graduate": false,
     "generation": "Gen 12",
     "video_perkenalan": "VtRUL3XyfZo",
-    "idn_username": "jkt48_oline"
+    "idn_username": "jkt48_oline",
+    "team": "Dream"
   },
   {
     "name": "Putry Jazyta",
@@ -2097,7 +2244,8 @@
     ],
     "is_graduate": false,
     "generation": "Trainee",
-    "idn_username": "jkt48_jazzy"
+    "idn_username": "jkt48_jazzy",
+    "team": "Trainee"
   },
   {
     "_id": "65ce68ea1dd7aa2c8c0ca6ce",
@@ -2106,9 +2254,9 @@
     "img": "https://static.showroom-live.com/image/room/cover/b5e493484b3fdd07ebadfd478837295c9968208cf3721934b46611eca5cb92b8_m.jpeg?v=1685542844",
     "img_alt": "https://res.cloudinary.com/haymzm4wp/image/upload/v1709326073/kfdsog6yd7duo3jh1imn.jpg",
     "url": "raisha",
-    "description": "📌 Name: Raisha Syifa Wardhana\r\n🎂 Birthday: 11 November 2007\r\n🩸 Blood type: AB+\r\n🏹 Zodiac signs: Scorpio\r\n📝 Hobby: Dance, Sing, Sport",
+    "description": "📌 Name: Raisha Syifa Wardhana\r\n🎂 Birthday: 11 November 2007\r\n🩸 Blood type: AB\r\n🏹 Zodiac signs: Scorpio\r\n📝 Hobby: Dance, Sing, Sport",
     "group": "jkt48",
-    "height": "163cm",
+    "height": "169cm",
     "jikosokai": "Kalau sakura itu kembang, Aku itu kembanggaanmu!",
     "socials": [
       {
@@ -2137,7 +2285,8 @@
     "is_graduate": false,
     "video_perkenalan": "RGjhuqrPIvc",
     "generation": "Gen 10",
-    "idn_username": "jkt48_raisha"
+    "idn_username": "jkt48_raisha",
+    "team": "Passion"
   },
   {
     "name": "Ralyne Van Irwan",
@@ -2157,7 +2306,8 @@
     ],
     "is_graduate": false,
     "generation": "Trainee",
-    "idn_username": "jkt48_ralyne"
+    "idn_username": "jkt48_ralyne",
+    "team": "Trainee"
   },
   {
     "_id": "65ce68ed1dd7aa2c8c0ca786",
@@ -2194,7 +2344,7 @@
     ],
     "room_id": 510068,
     "sr_exists": true,
-    "is_graduate": false,
+    "is_graduate": true,
     "generation": "Gen 12",
     "video_perkenalan": "rW6gsReuL5c",
     "idn_username": "jkt48_regie"
@@ -2208,7 +2358,7 @@
     "url": "ribka",
     "description": "📌 Name: Ribka Budiman\r\n🎂 Birthday: 13 Januari 2009\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Capricorn",
     "group": "jkt48",
-    "height": "163cm",
+    "height": "162cm",
     "jikosokai": "Mirror..Mirror on the wall..who the sweetest in here..It’s me Ribka!",
     "socials": [
       {
@@ -2221,7 +2371,7 @@
       },
       {
         "title": "TikTok",
-        "url": "https://www.tiktok.com/@jkt48.regie/"
+        "url": "https://www.tiktok.com/@jkt48.ribka/"
       },
       {
         "title": "SHOWROOM",
@@ -2237,7 +2387,8 @@
     "is_graduate": false,
     "generation": "Gen 12",
     "video_perkenalan": "QOYUQ4KEaZY",
-    "idn_username": "jkt48_ribka"
+    "idn_username": "jkt48_ribka",
+    "team": "Passion"
   },
   {
     "_id": "65ce68ed1dd7aa2c8c0ca78a",
@@ -2277,7 +2428,8 @@
     "is_graduate": false,
     "video_perkenalan": "ZMunV8WLDEY",
     "generation": "Gen 12",
-    "idn_username": "jkt48_nala"
+    "idn_username": "jkt48_nala",
+    "team": "Dream"
   },
   {
     "_id": "65ce68e51dd7aa2c8c0ca5a0",
@@ -2332,7 +2484,7 @@
     "group": "jkt48",
     "height": "154cm",
     "jikosokai": "",
-    "description": "📌 Name: Sona Kalyana\r\n🎂 Birthday: 1 Desember 2011\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Sagittarius",
+    "description": "📌 Name: Sona Kalyana\r\n🎂 Birthday: 1 Desember 2011\r\n🩸 Blood type: O\r\n🏹 Zodiac signs: Sagitarius",
     "socials": [
       {
         "title": "IDN",
@@ -2341,7 +2493,8 @@
     ],
     "is_graduate": false,
     "generation": "Trainee",
-    "idn_username": "jkt48_sona"
+    "idn_username": "jkt48_sona",
+    "team": "Trainee"
   },
   {
     "_id": "65ce68ed1dd7aa2c8c0ca78c",
@@ -2352,7 +2505,7 @@
     "url": "kimmy",
     "description": "📌 Name: Victoria Kimberly\r\n🎂 Birthday: 8 Maret 2010\r\n🩸 Blood type: AB\r\n🏹 Zodiac signs: Pisces",
     "group": "jkt48",
-    "height": "158cm",
+    "height": "162cm",
     "jikosokai": "Bagi hamster yang lincah, aku akan berlari-lari di pikiranmu. Halo Haa katakan Kimmy!",
     "socials": [
       {
@@ -2381,6 +2534,7 @@
     "is_graduate": false,
     "generation": "Gen 12",
     "video_perkenalan": "ST1GwVjfC8s",
-    "idn_username": "jkt48_kimmy"
+    "idn_username": "jkt48_kimmy",
+    "team": "Passion"
   }
 ]
