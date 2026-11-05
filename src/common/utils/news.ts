@@ -94,13 +94,25 @@ function formatIdDate(iso?: string | null): string {
   return `${d.getDate()} ${ID_MONTHS[d.getMonth()]} ${d.getFullYear()}`;
 }
 
-/** Fetch the latest news list from the JSON API. */
+/** Last successful list, served when jkt48.com is unreachable (Cloudflare blocks this server's IP). */
+const STALE_NEWS_MAX_MS = 24 * 60 * 60 * 1000;
+let lastGoodNews: { items: NewsApiItem[]; at: number } | null = null;
+let lastNewsErrorLogged = 0;
+
+/** Fetch the latest news list from the JSON API; falls back to the last good list (<24h old), else null. */
 export const fetchNewsData = async (): Promise<NewsApiItem[] | null> => {
   try {
-    return await jkt48ApiGet<NewsApiItem[]>("news?lang=id");
+    const items = await jkt48ApiGet<NewsApiItem[]>("news?lang=id");
+    lastGoodNews = { items, at: Date.now() };
+    return items;
   } catch (error) {
     const err = error as Error;
-    console.error("Error fetching news data:", err.message);
+    // Log at most once per 10 minutes: every /news click used to add a line.
+    if (Date.now() - lastNewsErrorLogged > 10 * 60 * 1000) {
+      lastNewsErrorLogged = Date.now();
+      console.error("Error fetching news data:", err.message);
+    }
+    if (lastGoodNews && Date.now() - lastGoodNews.at < STALE_NEWS_MAX_MS) return lastGoodNews.items;
     return null;
   }
 };

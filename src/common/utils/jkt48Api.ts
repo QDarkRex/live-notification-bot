@@ -122,7 +122,16 @@ export async function jkt48ApiRaw<T>(path: string): Promise<ApiEnvelope<T>> {
   }
 
   // 2) FlareSolverr fallback
-  return viaFlareSolverr<ApiEnvelope<T>>(url);
+  try {
+    return await viaFlareSolverr<ApiEnvelope<T>>(url);
+  } catch (error) {
+    // The usual cause is jkt48.com's Cloudflare challenge on this server's IP
+    // (direct request 403, FlareSolverr blocked/500). Say so instead of a bare
+    // "status code 500".
+    throw new Error(
+      `jkt48.com unreachable for "${path}" (direct blocked, FlareSolverr failed: ${(error as Error).message})`,
+    );
+  }
 }
 
 /**

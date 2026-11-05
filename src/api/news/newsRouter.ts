@@ -9,7 +9,8 @@ newsRouter.get("/", async (req, res) => {
   try {
     const html = await fetchNewsData();
     if (!html) {
-      return res.status(500).json({ error: "Failed to fetch news data" });
+      // Upstream (jkt48.com / Cloudflare) is unreachable: not a server bug.
+      return res.status(503).json({ error: "News source unavailable", unavailable: true });
     }
     const parsedData = parseNewsData(html);
     return res.status(200).json(parsedData);

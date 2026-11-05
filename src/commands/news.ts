@@ -37,6 +37,12 @@ export async function run({ interaction }: SlashCommandProps) {
       components: [row],
     });
   } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 503) {
+      await interaction.editReply({
+        content: "Berita sementara tidak tersedia (jkt48.com tidak bisa diakses dari server bot). Coba lagi nanti.",
+      });
+      return;
+    }
     console.error("Error fetching news:", error);
     await interaction.editReply({
       content: "Terjadi kesalahan saat mengambil data berita.",
